@@ -2,7 +2,7 @@
   "name": "play-gen",
   "version": "1.0.0",
   "engines": {
-    "node": "14.x"
+    "node": "14.6.0"
   },
   "description": "This app intends to create and modify playlists en masse, instead of adding songs one by one on Spotify.",
   "main": "server.js",
