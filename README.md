@@ -1,0 +1,2 @@
+# A Web App that uses Spotify's Web API
+This app creates playlists en-masse in Spotify instead of one by one in the playlist. It accomplishes this by using the context of the playlist being modified or the listening history of the user using the app.

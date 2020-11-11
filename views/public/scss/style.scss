@@ -1,0 +1,247 @@
+@import url('https://fonts.googleapis.com/css2?family=Dosis:wght@400;700&family=Montserrat:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+$titles: 'Dosis',
+sans-serif;
+$text: 'Montserrat',
+sans-serif;
+$bold-text: 700;
+$regular-text: 500;
+$black: hsl(0, 5%, 12%);
+$gray: hsl(0, 4%, 20%);
+$vermil: hsl(4, 92%, 46%);
+$linen: hsl(26, 68%, 93%);
+$green: hsl(131, 67%, 60%);
+
+html {
+    font-size: 62.5%;
+    background-color: $gray;
+}
+
+h1{
+    font-family: $titles;
+    color: $linen;
+    font-size: 4.5rem;
+    font-weight: $bold-text;
+}
+
+h2 {
+    font-family: $titles;
+    font-size: 2rem;
+    font-weight: $bold-text;
+}
+
+label {
+    font-size: 1.5rem;
+    font-family: $text;
+    margin-right: 2.5rem;
+}
+
+h2,
+label {
+    color: $linen;
+}
+
+svg {
+    font-size: 1.7rem;
+    margin-right: 0.8rem;
+}
+
+hr {
+    width: 60%;
+    margin-bottom: 3rem;
+    border-color: $linen;
+}
+
+h3{
+    color: $linen;
+    font-family: $text;
+    font-size: 1.6rem;
+}
+
+.explain-list{
+    li::marker{
+        color: $linen;
+    }
+}
+
+.list-row{
+    padding-bottom: 5rem;
+    margin: auto;
+}
+
+.btn {
+    // taken from https://emilkowalski.github.io/css-effects-snippets/ and slightly modified
+    padding: 0.5rem 1.5rem;
+    background-color: $green;
+    color: $black;
+    border-color: $black;
+    position: relative;
+    border-radius: 6px;
+    overflow: hidden;
+    z-index: 1;
+
+    span {
+        z-index: 1;
+        position: relative;
+    }
+
+    &:before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        transform: translate3d(-50%, -50%, 0) scale3d(0, 0, 0);
+        transition: opacity .4s cubic-bezier(.19, 1, .22, 1), transform .75s cubic-bezier(.19, 1, .22, 1);
+        background-color: $vermil;
+        opacity: 0;
+    }
+
+    &:hover span {
+        color: hsl(222, 100%, 95%);
+    }
+
+    &:hover:before {
+        opacity: 1;
+        transition-duration: .85s;
+        transform: translate3d(-50%, -50%, 0) scale3d(1, 1, 1)
+    }
+
+}
+
+.container-fluid {
+    background-color: $gray;
+    height: 100vh;
+}
+
+.nav-row {
+    background-color: $black;
+    color: $green;
+
+    nav {
+        padding-left: 2rem;
+        font-size: 1.5rem;
+
+        .navbar-brand {
+            font-family: $titles;
+            color: $green;
+            font-size: 1.5rem;
+        }
+
+        ul {
+            li {
+                // taken from https://emilkowalski.github.io/css-effects-snippets/ and slightly modified
+                display: inline-block;
+                position: relative;
+                color: hsl(222, 25%, 14%);
+
+                &:after {
+                    content: '';
+                    position: absolute;
+                    width: 100%;
+                    transform: scaleX(0);
+                    height: 2px;
+                    bottom: 0;
+                    left: 0;
+                    background-color: $vermil;
+                    transform-origin: bottom right;
+                    transition: transform 0.4s cubic-bezier(0.86, 0, 0.07, 1);
+                }
+
+                &:hover::after {
+                    transform: scaleX(1);
+                    transform-origin: bottom left;
+                }
+            }
+        }
+    }
+}
+
+.row {
+    margin-bottom: 2.5rem;
+}
+
+.btn {
+    font-size: 1.7rem;
+}
+
+.form {
+    width: 40%;
+    margin: auto;
+}
+
+.sidebar-links {
+    list-style-type: none;
+    margin: 0;
+    padding-left: 2rem;
+}
+
+.form-group {
+    padding-right: 5rem;
+}
+
+.num-input {
+    width: 90%;
+}
+
+.num-input, .text-input{
+    font-size: 1.4rem;
+}
+
+.checkbox {
+    margin-left: 2rem;
+}
+
+.button-div {
+    margin-top: 1.2rem;
+}
+
+#collapse-button:hover {
+    cursor: pointer;
+}
+
+#create-form {
+    margin-bottom: 2rem;
+}
+
+.logout{
+    padding-top: 3rem;
+}
+
+.feedback-text{
+    font-size: 1.2rem;
+    color: $vermil;
+}
+
+.footer{
+    background-color: $gray;
+    p{
+        color: $linen;
+        font-size: 1.3rem;
+        font-family: $text;
+        a{
+            text-decoration: none;
+            color: #6610F2;
+            &:hover{
+                color: $green !important;
+            }
+            &:visited{
+                color: $vermil;
+            }
+        }
+    }
+}
+
+/* Removing the arrows from the number inputs, taken from W3 School*/
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
