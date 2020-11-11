@@ -29,7 +29,6 @@ var express = require("express"),
 
 require("dotenv").config();
 
-var port = 8888;
 var authCallbackPath = "/auth/spotify/callback"; //setting up database connection
 
 mongoose.connect(process.env.MONGO_URI, {
@@ -1263,9 +1262,13 @@ app.get('/mod', function _callee3(req, res) {
     }
   });
 });
-app.listen(port, function () {
-  console.log("App is listening on port " + port);
-}); // ensure the user is still authenticated
+var port = process.env.PORT;
+
+if (port == null || port == "") {
+  port = 8000;
+}
+
+app.listen(port); // ensure the user is still authenticated
 
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {

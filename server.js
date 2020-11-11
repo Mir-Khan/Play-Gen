@@ -16,7 +16,6 @@ var express = require("express"),
 
 require("dotenv").config();
 
-var port = 8888;
 var authCallbackPath = "/auth/spotify/callback";
 
 //setting up database connection
@@ -453,9 +452,12 @@ app.get('/mod', async (req, res) => {
   res.redirect("/");
 });
 
-app.listen(port, function () {
-  console.log("App is listening on port " + port);
-});
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 8000;
+}
+app.listen(port);
+
 
 // ensure the user is still authenticated
 function ensureAuthenticated(req, res, next) {
