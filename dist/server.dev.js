@@ -297,26 +297,12 @@ app.use(helmet.contentSecurityPolicy({
     "default-src": ["'self'", "https://ka-f.fontawesome.com/releases/v5.15.1/css/free.min.css", "https://ka-f.fontawesome.com/releases/v5.15.1/css/free-v4-shims.min.css", "https://ka-f.fontawesome.com/releases/v5.15.1/css/free-v4-font-face.min.css"],
     "script-src": ["'self'", "https://kit.fontawesome.com/63ada23c4f.js", "https://code.jquery.com/jquery-3.5.1.slim.min.js", "https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js", "'unsafe-inline'"]
   })
-})); // From https://stackoverflow.com/questions/44882535/warning-connect-session-memorystore-is-not-designed-for-a-production-environm
-
-app.set('trust proxy', 1);
-app.use(session({
-  cookie: {
-    secure: true,
-    maxAge: 60000
-  },
-  store: new RedisStore(),
-  secret: 'secret',
-  saveUninitialized: true,
-  resave: false
 }));
-app.use(function (req, res, next) {
-  if (!req.session) {
-    return next(new Error('Oh no')); //handle error
-  }
-
-  next(); //otherwise continue
-}); //initializing passport
+app.use(session({
+  secret: "keyboard cat",
+  resave: true,
+  saveUninitialized: true
+})); //initializing passport
 
 app.use(passport.initialize());
 app.use(passport.session());
