@@ -774,10 +774,10 @@ app.get("/new", function _callee2(req, res) {
           return regeneratorRuntime.awrap(addPlaylistItems(addPlaylistUrl, jsonHeaders));
 
         case 16:
-          res.json("Success!");
+          // res.json("Success!");
           res.redirect("/");
 
-        case 18:
+        case 17:
         case "end":
           return _context6.stop();
       }
@@ -1244,18 +1244,16 @@ app.get('/mod', function _callee3(req, res) {
 
         case 2:
           result = _context8.sent;
-
-          if (result === 'noSong') {
-            res.json("There weren't any songs in the requested playlist. Use the other form if you want to create a new playlist from scratch!");
-          } else if (result === 'noPlay') {
-            res.json('No playlist found of that name. Please try again.');
-          } else {
-            res.json("Success!");
-          }
-
+          // if(result === 'noSong'){
+          //   res.json("There weren't any songs in the requested playlist. Use the other form if you want to create a new playlist from scratch!");
+          // }else if(result === 'noPlay'){
+          //   res.json('No playlist found of that name. Please try again.')
+          // }else{
+          //   res.json("Success!");
+          // }
           res.redirect("/");
 
-        case 5:
+        case 4:
         case "end":
           return _context8.stop();
       }

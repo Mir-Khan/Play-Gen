@@ -339,7 +339,7 @@ app.get("/new", async (req, res) => {
   // I used the id returned from the creation in order to create the url, while also adding the track uris to the url
   let addPlaylistUrl = playlistUrlCreator('https://api.spotify.com/v1/playlists/', newPlaylistId, uris);
   await addPlaylistItems(addPlaylistUrl, jsonHeaders);
-  res.json("Success!")
+  // res.json("Success!");
   res.redirect("/");
 });
 
@@ -443,13 +443,13 @@ async function modifyPlaylist(name, num_songs) {
 
 app.get('/mod', async (req, res) => {
   let result = await modifyPlaylist(req.query.mod_playlist_name, req.query.add_songs);
-  if(result === 'noSong'){
-    res.json("There weren't any songs in the requested playlist. Use the other form if you want to create a new playlist from scratch!");
-  }else if(result === 'noPlay'){
-    res.json('No playlist found of that name. Please try again.')
-  }else{
-    res.json("Success!");
-  }
+  // if(result === 'noSong'){
+  //   res.json("There weren't any songs in the requested playlist. Use the other form if you want to create a new playlist from scratch!");
+  // }else if(result === 'noPlay'){
+  //   res.json('No playlist found of that name. Please try again.')
+  // }else{
+  //   res.json("Success!");
+  // }
   res.redirect("/");
 });
 
