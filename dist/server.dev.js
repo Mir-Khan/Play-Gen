@@ -229,7 +229,7 @@ var currentUserId; // Taken from the passport-spotify example
 passport.use(new SpotifyStrategy({
   clientID: process.env.CLIENT_ID,
   clientSecret: process.env.CLIENT_SECRET,
-  callbackURL: "http://localhost:" + process.env.PORT + authCallbackPath
+  callbackURL: 'https://play-gen.herokuapp.com/callback/'
 }, function (accessToken, refreshToken, expires_in, profile, done) {
   process.nextTick(function _callee() {
     var userExist, newUser;
