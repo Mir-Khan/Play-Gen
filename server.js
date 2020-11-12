@@ -16,7 +16,7 @@ var express = require("express"),
 
 require("dotenv").config();
 
-var authCallbackPath = "https://play-gen.herokuapp.com/callback";
+var authCallbackPath = "/auth/spotify/callback";
 
 //setting up database connection
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -144,7 +144,7 @@ passport.use(
     {
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
-      callbackURL: 'https://play-gen.herokuapp.com/callback',
+      callbackURL: 'https://play-gen.herokuapp.com/' + authCallbackPath,
     },
     function (accessToken, refreshToken, expires_in, profile, done) {
       process.nextTick(async function () {

@@ -29,7 +29,7 @@ var express = require("express"),
 
 require("dotenv").config();
 
-var authCallbackPath = "https://play-gen.herokuapp.com/callback"; //setting up database connection
+var authCallbackPath = "/auth/spotify/callback"; //setting up database connection
 
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
@@ -229,7 +229,7 @@ var currentUserId; // Taken from the passport-spotify example
 passport.use(new SpotifyStrategy({
   clientID: process.env.CLIENT_ID,
   clientSecret: process.env.CLIENT_SECRET,
-  callbackURL: 'https://play-gen.herokuapp.com/callback'
+  callbackURL: 'https://play-gen.herokuapp.com/' + authCallbackPath
 }, function (accessToken, refreshToken, expires_in, profile, done) {
   process.nextTick(function _callee() {
     var userExist, newUser;
