@@ -229,7 +229,7 @@ var currentUserId; // Taken from the passport-spotify example
 passport.use(new SpotifyStrategy({
   clientID: process.env.CLIENT_ID,
   clientSecret: process.env.CLIENT_SECRET,
-  callbackURL: 'https://play-gen.herokuapp.com' + authCallbackPath
+  callbackURL: 'https://play-gen.herokuapp.com/callback' + authCallbackPath
 }, function (accessToken, refreshToken, expires_in, profile, done) {
   process.nextTick(function _callee() {
     var userExist, newUser;
@@ -1261,7 +1261,14 @@ app.get('/mod', function _callee3(req, res) {
       }
     }
   });
-}); // ensure the user is still authenticated
+});
+var port = process.env.PORT;
+
+if (port == null || port == "") {
+  port = 8000;
+}
+
+app.listen(port); // ensure the user is still authenticated
 
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
