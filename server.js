@@ -139,6 +139,9 @@ passport.deserializeUser(function (obj, done) {
 var currentUserId;
 
 // Taken from the passport-spotify example
+// 'https://play-gen.herokuapp.com' + authCallbackPath = deployed environment
+// 'http://localhost:' + process.env.PORT + authCallbackPath = local testing
+
 passport.use(
   new SpotifyStrategy(
     {
@@ -332,7 +335,7 @@ app.get("/new", async (req, res) => {
   // getting track uris
   let uris = await newPlaylistTracks(Number(req.query.num_songs).toString());
   // the details needed in order to create a new playlist
-  let newPlaylistDetails = { name: req.query.playlist_name, public: publicState, description: "Created on " + getDate() };
+  let newPlaylistDetails = { name: req.query.new_playlist_name, public: publicState, description: "Created on " + getDate() };
   let newPlaylistUrl = 'https://api.spotify.com/v1/users/' + currentUserId + '/playlists';
   // the axios call will return the new playlist's id while also creating the playlist
   let newPlaylistId = await newPlaylistCreation(newPlaylistUrl, jsonHeaders, newPlaylistDetails);
