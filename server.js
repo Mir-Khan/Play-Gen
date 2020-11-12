@@ -16,7 +16,7 @@ var express = require("express"),
 
 require("dotenv").config();
 
-var authCallbackPath = "/auth/spotify/callback";
+var authCallbackPath = "https://play-gen.herokuapp.com/callback/";
 
 //setting up database connection
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
