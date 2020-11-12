@@ -144,7 +144,7 @@ passport.use(
     {
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
-      callbackURL: 'https://play-gen.herokuapp.com/' + authCallbackPath,
+      callbackURL: 'https://play-gen.herokuapp.com' + authCallbackPath,
     },
     function (accessToken, refreshToken, expires_in, profile, done) {
       process.nextTick(async function () {
@@ -451,12 +451,6 @@ app.get('/mod', async (req, res) => {
   }
   res.redirect("/");
 });
-
-let port = process.env.PORT;
-if (port == null || port == "") {
-  port = 8000;
-}
-app.listen(port);
 
 
 // ensure the user is still authenticated
