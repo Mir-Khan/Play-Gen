@@ -144,7 +144,7 @@ passport.use(
     {
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
-      callbackURL: 'https://play-gen.herokuapp.com/callback' + authCallbackPath,
+      callbackURL: 'https://play-gen.herokuapp.com' + authCallbackPath,
     },
     function (accessToken, refreshToken, expires_in, profile, done) {
       process.nextTick(async function () {
