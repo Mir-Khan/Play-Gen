@@ -225,6 +225,8 @@ passport.deserializeUser(function (obj, done) {
   done(null, obj);
 });
 var currentUserId; // Taken from the passport-spotify example
+// 'https://play-gen.herokuapp.com' + authCallbackPath = deployed environment
+// 'http://localhost:' + process.env.PORT + authCallbackPath = local testing
 
 passport.use(new SpotifyStrategy({
   clientID: process.env.CLIENT_ID,
@@ -757,7 +759,7 @@ app.get("/new", function _callee2(req, res) {
           uris = _context6.sent;
           // the details needed in order to create a new playlist
           newPlaylistDetails = {
-            name: req.query.playlist_name,
+            name: req.query.new_playlist_name,
             "public": publicState,
             description: "Created on " + getDate()
           };
