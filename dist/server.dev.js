@@ -13,7 +13,8 @@ var _require2 = require("express"),
     response = _require2.response;
 
 var _require3 = require("inspector"),
-    url = _require3.url;
+    url = _require3.url; // modified from the passport-spotify example
+
 
 var express = require("express"),
     session = require("express-session"),
@@ -111,11 +112,12 @@ passport.serializeUser(function (user, done) {
 });
 passport.deserializeUser(function (obj, done) {
   done(null, obj);
-});
-var currentUserId; // Taken from the passport-spotify example
-// let cbUrl = 'https://play-gen.herokuapp.com' + authCallbackPath; //deployed environment
+}); // used for some of the Spotify API
 
-var cbUrl = 'http://localhost:' + process.env.PORT + authCallbackPath; //local testing
+var currentUserId; // Taken from the passport-spotify example
+
+var cbUrl = 'https://play-gen.herokuapp.com' + authCallbackPath; //deployed environment
+// let cbUrl = 'http://localhost:' + process.env.PORT + authCallbackPath //local testing
 
 passport.use(new SpotifyStrategy({
   clientID: process.env.CLIENT_ID,

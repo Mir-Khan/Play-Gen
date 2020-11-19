@@ -2,6 +2,8 @@ const { json } = require("body-parser");
 const { response } = require("express");
 const { url } = require("inspector");
 
+// modified from the passport-spotify example
+
 var express = require("express"),
   session = require("express-session"),
   passport = require("passport"),
@@ -73,11 +75,12 @@ passport.deserializeUser(function (obj, done) {
   done(null, obj);
 });
 
+// used for some of the Spotify API
 var currentUserId;
 
 // Taken from the passport-spotify example
-// let cbUrl = 'https://play-gen.herokuapp.com' + authCallbackPath; //deployed environment
-let cbUrl = 'http://localhost:' + process.env.PORT + authCallbackPath //local testing
+let cbUrl = 'https://play-gen.herokuapp.com' + authCallbackPath; //deployed environment
+// let cbUrl = 'http://localhost:' + process.env.PORT + authCallbackPath //local testing
 
 passport.use(
   new SpotifyStrategy(

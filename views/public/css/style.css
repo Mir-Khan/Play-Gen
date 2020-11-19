@@ -161,9 +161,9 @@ h3 {
       text-decoration: none;
       color: #6610F2; }
       .footer p a:hover {
-        color: #55dd6e !important; }
+        color: #f9ece1 !important; }
       .footer p a:visited {
-        color: #e11809; }
+        color: #eeeb2b; }
 
 /* Removing the arrows from the number inputs, taken from W3 School*/
 /* Chrome, Safari, Edge, Opera */

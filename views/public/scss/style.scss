@@ -224,10 +224,10 @@ h3{
             text-decoration: none;
             color: #6610F2;
             &:hover{
-                color: $green !important;
+                color: $linen !important;
             }
             &:visited{
-                color: $vermil;
+                color: hsl(59, 85%, 55%);
             }
         }
     }
