@@ -4,7 +4,7 @@ const { url } = require("inspector");
 
 // modified from the passport-spotify example
 
-var express = require("express"),
+const express = require("express"),
   session = require("express-session"),
   passport = require("passport"),
   SpotifyStrategy = require("passport-spotify").Strategy,
@@ -18,7 +18,7 @@ var express = require("express"),
 
 require("dotenv").config();
 
-var authCallbackPath = "/auth/spotify/callback";
+const authCallbackPath = "/auth/spotify/callback";
 
 //setting up database connection
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -76,7 +76,7 @@ passport.deserializeUser(function (obj, done) {
 });
 
 // used for some of the Spotify API
-var currentUserId;
+let currentUserId;
 
 // Taken from the passport-spotify example
 let cbUrl = 'https://play-gen.herokuapp.com' + authCallbackPath; //deployed environment
@@ -111,7 +111,7 @@ passport.use(
   )
 );
 
-var app = express();
+const app = express();
 
 // configure Express
 app.set("views", __dirname + "/views");
@@ -176,19 +176,6 @@ app.get("/logout", function (req, res) {
   res.redirect("/");
 });
 
-// these two functions create urls for the call
-// this one creates the url used to create a playlist
-function playlistUrlCreator(baseUrl, playlistId, uris) {
-  baseUrl += playlistId + '/tracks?uris=';
-  let globalExp = /:/g;
-  for (item of uris) {
-    baseUrl += item.replace(globalExp, '%3A');
-    if (item !== uris[uris.length - 1]) {
-      baseUrl += '%2C';
-    }
-  }
-  return baseUrl;
-}
 // this one creates a url to get recommendations from the web api
 function recUrlCreator(baseUrl, queryParameter, items) {
   baseUrl += '&' + queryParameter + '=';
@@ -200,6 +187,7 @@ function recUrlCreator(baseUrl, queryParameter, items) {
   }
   return baseUrl;
 }
+
 // this function gets recommended tracks
 async function newPlaylistTracks(num_songs) {
   let foundUser = await user.find({ _id: currentUserId });
@@ -290,10 +278,10 @@ async function newPlaylistTracks(num_songs) {
 
 //function to get the current date, gotten from stackoverflow
 function getDate() {
-  var today = new Date();
-  var dd = String(today.getDate()).padStart(2, '0');
-  var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-  var yyyy = today.getFullYear();
+  let today = new Date();
+  let dd = String(today.getDate()).padStart(2, '0');
+  let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+  let yyyy = today.getFullYear();
   return mm + '/' + dd + '/' + yyyy;
 }
 
@@ -496,13 +484,6 @@ async function addToExisting(name, num_songs) {
 
 app.get('/mod', async (req, res) => {
   let result = await addToExisting(req.query.mod_playlist_name, req.query.add_songs);
-  // if(result === 'noSong'){
-  //   res.json("There weren't any songs in the requested playlist. Use the other form if you want to create a new playlist from scratch!");
-  // }else if(result === 'noPlay'){
-  //   res.json('No playlist found of that name. Please try again.')
-  // }else{
-  //   res.json("Success!");
-  // }
   res.redirect("/");
 });
 
@@ -511,12 +492,3 @@ if (port == null || port == "") {
   port = 8000;
 }
 app.listen(port);
-
-
-// ensure the user is still authenticated
-function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.redirect("/");
-}

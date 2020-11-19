@@ -223,22 +223,20 @@ app.get(authCallbackPath, passport.authenticate("spotify", {
 app.get("/logout", function (req, res) {
   req.logout();
   res.redirect("/");
-}); // these two functions create urls for the call
-// this one creates the url used to create a playlist
+}); // this one creates a url to get recommendations from the web api
 
-function playlistUrlCreator(baseUrl, playlistId, uris) {
-  baseUrl += playlistId + '/tracks?uris=';
-  var globalExp = /:/g;
+function recUrlCreator(baseUrl, queryParameter, items) {
+  baseUrl += '&' + queryParameter + '=';
   var _iteratorNormalCompletion = true;
   var _didIteratorError = false;
   var _iteratorError = undefined;
 
   try {
-    for (var _iterator = uris[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-      item = _step.value;
-      baseUrl += item.replace(globalExp, '%3A');
+    for (var _iterator = items[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      k = _step.value;
+      baseUrl += k;
 
-      if (item !== uris[uris.length - 1]) {
+      if (k !== items[items.length - 1]) {
         baseUrl += '%2C';
       }
     }
@@ -258,45 +256,11 @@ function playlistUrlCreator(baseUrl, playlistId, uris) {
   }
 
   return baseUrl;
-} // this one creates a url to get recommendations from the web api
-
-
-function recUrlCreator(baseUrl, queryParameter, items) {
-  baseUrl += '&' + queryParameter + '=';
-  var _iteratorNormalCompletion2 = true;
-  var _didIteratorError2 = false;
-  var _iteratorError2 = undefined;
-
-  try {
-    for (var _iterator2 = items[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-      k = _step2.value;
-      baseUrl += k;
-
-      if (k !== items[items.length - 1]) {
-        baseUrl += '%2C';
-      }
-    }
-  } catch (err) {
-    _didIteratorError2 = true;
-    _iteratorError2 = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
-        _iterator2["return"]();
-      }
-    } finally {
-      if (_didIteratorError2) {
-        throw _iteratorError2;
-      }
-    }
-  }
-
-  return baseUrl;
 } // this function gets recommended tracks
 
 
 function newPlaylistTracks(num_songs) {
-  var foundUser, nonJsonHeaders, jsonHeaders, artistsUrl, tracksUrl, artistsObject, tracksObject, genresFound, _iteratorNormalCompletion3, _didIteratorError3, _iteratorError3, _iterator3, _step3, _iteratorNormalCompletion9, _didIteratorError9, _iteratorError9, _iterator9, _step9, ids, _iteratorNormalCompletion4, _didIteratorError4, _iteratorError4, _iterator4, _step4, _iteratorNormalCompletion5, _didIteratorError5, _iteratorError5, _iterator5, _step5, genres, artists, tracks, recUrl, _recommendations, recomTrackUris, _iteratorNormalCompletion6, _didIteratorError6, _iteratorError6, _iterator6, _step6, _recomTrackUris, _recommendations2, numIters, _i, _recUrl, _iteratorNormalCompletion7, _didIteratorError7, _iteratorError7, _iterator7, _step7, remainingSongs, _recUrl2, _iteratorNormalCompletion8, _didIteratorError8, _iteratorError8, _iterator8, _step8;
+  var foundUser, nonJsonHeaders, jsonHeaders, artistsUrl, tracksUrl, artistsObject, tracksObject, genresFound, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, _iteratorNormalCompletion8, _didIteratorError8, _iteratorError8, _iterator8, _step8, ids, _iteratorNormalCompletion3, _didIteratorError3, _iteratorError3, _iterator3, _step3, _iteratorNormalCompletion4, _didIteratorError4, _iteratorError4, _iterator4, _step4, genres, artists, tracks, recUrl, _recommendations, recomTrackUris, _iteratorNormalCompletion5, _didIteratorError5, _iteratorError5, _iterator5, _step5, _recomTrackUris, _recommendations2, numIters, _i, _recUrl, _iteratorNormalCompletion6, _didIteratorError6, _iteratorError6, _iterator6, _step6, remainingSongs, _recUrl2, _iteratorNormalCompletion7, _didIteratorError7, _iteratorError7, _iterator7, _step7;
 
   return regeneratorRuntime.async(function newPlaylistTracks$(_context3) {
     while (1) {
@@ -349,26 +313,26 @@ function newPlaylistTracks(num_songs) {
           tracksObject = _context3.sent;
           // To get the genres, I decided on finding the unique genres found in the top artists listened to by the user
           genresFound = [];
-          _iteratorNormalCompletion3 = true;
-          _didIteratorError3 = false;
-          _iteratorError3 = undefined;
+          _iteratorNormalCompletion2 = true;
+          _didIteratorError2 = false;
+          _iteratorError2 = undefined;
           _context3.prev = 17;
-          _iterator3 = artistsObject.items[Symbol.iterator]();
+          _iterator2 = artistsObject.items[Symbol.iterator]();
 
         case 19:
-          if (_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done) {
+          if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
             _context3.next = 43;
             break;
           }
 
-          artist = _step3.value;
-          _iteratorNormalCompletion9 = true;
-          _didIteratorError9 = false;
-          _iteratorError9 = undefined;
+          artist = _step2.value;
+          _iteratorNormalCompletion8 = true;
+          _didIteratorError8 = false;
+          _iteratorError8 = undefined;
           _context3.prev = 24;
 
-          for (_iterator9 = artist.genres[Symbol.iterator](); !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
-            genre = _step9.value;
+          for (_iterator8 = artist.genres[Symbol.iterator](); !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+            genre = _step8.value;
 
             if (genresFound.indexOf(genre) === -1) {
               genresFound.push(genre);
@@ -381,26 +345,26 @@ function newPlaylistTracks(num_songs) {
         case 28:
           _context3.prev = 28;
           _context3.t0 = _context3["catch"](24);
-          _didIteratorError9 = true;
-          _iteratorError9 = _context3.t0;
+          _didIteratorError8 = true;
+          _iteratorError8 = _context3.t0;
 
         case 32:
           _context3.prev = 32;
           _context3.prev = 33;
 
-          if (!_iteratorNormalCompletion9 && _iterator9["return"] != null) {
-            _iterator9["return"]();
+          if (!_iteratorNormalCompletion8 && _iterator8["return"] != null) {
+            _iterator8["return"]();
           }
 
         case 35:
           _context3.prev = 35;
 
-          if (!_didIteratorError9) {
+          if (!_didIteratorError8) {
             _context3.next = 38;
             break;
           }
 
-          throw _iteratorError9;
+          throw _iteratorError8;
 
         case 38:
           return _context3.finish(35);
@@ -409,7 +373,7 @@ function newPlaylistTracks(num_songs) {
           return _context3.finish(32);
 
         case 40:
-          _iteratorNormalCompletion3 = true;
+          _iteratorNormalCompletion2 = true;
           _context3.next = 19;
           break;
 
@@ -420,26 +384,26 @@ function newPlaylistTracks(num_songs) {
         case 45:
           _context3.prev = 45;
           _context3.t1 = _context3["catch"](17);
-          _didIteratorError3 = true;
-          _iteratorError3 = _context3.t1;
+          _didIteratorError2 = true;
+          _iteratorError2 = _context3.t1;
 
         case 49:
           _context3.prev = 49;
           _context3.prev = 50;
 
-          if (!_iteratorNormalCompletion3 && _iterator3["return"] != null) {
-            _iterator3["return"]();
+          if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
+            _iterator2["return"]();
           }
 
         case 52:
           _context3.prev = 52;
 
-          if (!_didIteratorError3) {
+          if (!_didIteratorError2) {
             _context3.next = 55;
             break;
           }
 
-          throw _iteratorError3;
+          throw _iteratorError2;
 
         case 55:
           return _context3.finish(52);
@@ -453,13 +417,13 @@ function newPlaylistTracks(num_songs) {
             artists: [],
             tracks: []
           };
-          _iteratorNormalCompletion4 = true;
-          _didIteratorError4 = false;
-          _iteratorError4 = undefined;
+          _iteratorNormalCompletion3 = true;
+          _didIteratorError3 = false;
+          _iteratorError3 = undefined;
           _context3.prev = 61;
 
-          for (_iterator4 = artistsObject.items[Symbol.iterator](); !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-            i = _step4.value;
+          for (_iterator3 = artistsObject.items[Symbol.iterator](); !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            i = _step3.value;
             ids.artists.push(i.id);
           }
 
@@ -469,26 +433,26 @@ function newPlaylistTracks(num_songs) {
         case 65:
           _context3.prev = 65;
           _context3.t2 = _context3["catch"](61);
-          _didIteratorError4 = true;
-          _iteratorError4 = _context3.t2;
+          _didIteratorError3 = true;
+          _iteratorError3 = _context3.t2;
 
         case 69:
           _context3.prev = 69;
           _context3.prev = 70;
 
-          if (!_iteratorNormalCompletion4 && _iterator4["return"] != null) {
-            _iterator4["return"]();
+          if (!_iteratorNormalCompletion3 && _iterator3["return"] != null) {
+            _iterator3["return"]();
           }
 
         case 72:
           _context3.prev = 72;
 
-          if (!_didIteratorError4) {
+          if (!_didIteratorError3) {
             _context3.next = 75;
             break;
           }
 
-          throw _iteratorError4;
+          throw _iteratorError3;
 
         case 75:
           return _context3.finish(72);
@@ -497,13 +461,13 @@ function newPlaylistTracks(num_songs) {
           return _context3.finish(69);
 
         case 77:
-          _iteratorNormalCompletion5 = true;
-          _didIteratorError5 = false;
-          _iteratorError5 = undefined;
+          _iteratorNormalCompletion4 = true;
+          _didIteratorError4 = false;
+          _iteratorError4 = undefined;
           _context3.prev = 80;
 
-          for (_iterator5 = tracksObject.items[Symbol.iterator](); !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-            j = _step5.value;
+          for (_iterator4 = tracksObject.items[Symbol.iterator](); !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+            j = _step4.value;
             ids.tracks.push(j.id);
           } // Now we sample the lists we have created to get a total of 5 seeds for the recommendation path of the web api
 
@@ -514,26 +478,26 @@ function newPlaylistTracks(num_songs) {
         case 84:
           _context3.prev = 84;
           _context3.t3 = _context3["catch"](80);
-          _didIteratorError5 = true;
-          _iteratorError5 = _context3.t3;
+          _didIteratorError4 = true;
+          _iteratorError4 = _context3.t3;
 
         case 88:
           _context3.prev = 88;
           _context3.prev = 89;
 
-          if (!_iteratorNormalCompletion5 && _iterator5["return"] != null) {
-            _iterator5["return"]();
+          if (!_iteratorNormalCompletion4 && _iterator4["return"] != null) {
+            _iterator4["return"]();
           }
 
         case 91:
           _context3.prev = 91;
 
-          if (!_didIteratorError5) {
+          if (!_didIteratorError4) {
             _context3.next = 94;
             break;
           }
 
-          throw _iteratorError5;
+          throw _iteratorError4;
 
         case 94:
           return _context3.finish(91);
@@ -568,13 +532,13 @@ function newPlaylistTracks(num_songs) {
           _recommendations = _context3.sent;
           // the tracks are then put into an array that is returned
           recomTrackUris = [];
-          _iteratorNormalCompletion6 = true;
-          _didIteratorError6 = false;
-          _iteratorError6 = undefined;
+          _iteratorNormalCompletion5 = true;
+          _didIteratorError5 = false;
+          _iteratorError5 = undefined;
           _context3.prev = 111;
 
-          for (_iterator6 = _recommendations.tracks[Symbol.iterator](); !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-            item = _step6.value;
+          for (_iterator5 = _recommendations.tracks[Symbol.iterator](); !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+            item = _step5.value;
             recomTrackUris.push(item.uri);
           }
 
@@ -584,26 +548,26 @@ function newPlaylistTracks(num_songs) {
         case 115:
           _context3.prev = 115;
           _context3.t4 = _context3["catch"](111);
-          _didIteratorError6 = true;
-          _iteratorError6 = _context3.t4;
+          _didIteratorError5 = true;
+          _iteratorError5 = _context3.t4;
 
         case 119:
           _context3.prev = 119;
           _context3.prev = 120;
 
-          if (!_iteratorNormalCompletion6 && _iterator6["return"] != null) {
-            _iterator6["return"]();
+          if (!_iteratorNormalCompletion5 && _iterator5["return"] != null) {
+            _iterator5["return"]();
           }
 
         case 122:
           _context3.prev = 122;
 
-          if (!_didIteratorError6) {
+          if (!_didIteratorError5) {
             _context3.next = 125;
             break;
           }
 
-          throw _iteratorError6;
+          throw _iteratorError5;
 
         case 125:
           return _context3.finish(122);
@@ -648,13 +612,13 @@ function newPlaylistTracks(num_songs) {
 
         case 141:
           _recommendations2 = _context3.sent;
-          _iteratorNormalCompletion7 = true;
-          _didIteratorError7 = false;
-          _iteratorError7 = undefined;
+          _iteratorNormalCompletion6 = true;
+          _didIteratorError6 = false;
+          _iteratorError6 = undefined;
           _context3.prev = 145;
 
-          for (_iterator7 = _recommendations2.tracks[Symbol.iterator](); !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-            item = _step7.value;
+          for (_iterator6 = _recommendations2.tracks[Symbol.iterator](); !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+            item = _step6.value;
 
             _recomTrackUris.push(item.uri);
           }
@@ -665,26 +629,26 @@ function newPlaylistTracks(num_songs) {
         case 149:
           _context3.prev = 149;
           _context3.t5 = _context3["catch"](145);
-          _didIteratorError7 = true;
-          _iteratorError7 = _context3.t5;
+          _didIteratorError6 = true;
+          _iteratorError6 = _context3.t5;
 
         case 153:
           _context3.prev = 153;
           _context3.prev = 154;
 
-          if (!_iteratorNormalCompletion7 && _iterator7["return"] != null) {
-            _iterator7["return"]();
+          if (!_iteratorNormalCompletion6 && _iterator6["return"] != null) {
+            _iterator6["return"]();
           }
 
         case 156:
           _context3.prev = 156;
 
-          if (!_didIteratorError7) {
+          if (!_didIteratorError6) {
             _context3.next = 159;
             break;
           }
 
-          throw _iteratorError7;
+          throw _iteratorError6;
 
         case 159:
           return _context3.finish(156);
@@ -710,13 +674,13 @@ function newPlaylistTracks(num_songs) {
 
         case 170:
           _recommendations2 = _context3.sent;
-          _iteratorNormalCompletion8 = true;
-          _didIteratorError8 = false;
-          _iteratorError8 = undefined;
+          _iteratorNormalCompletion7 = true;
+          _didIteratorError7 = false;
+          _iteratorError7 = undefined;
           _context3.prev = 174;
 
-          for (_iterator8 = _recommendations2.tracks[Symbol.iterator](); !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-            item = _step8.value;
+          for (_iterator7 = _recommendations2.tracks[Symbol.iterator](); !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+            item = _step7.value;
 
             _recomTrackUris.push(item.uri);
           }
@@ -727,26 +691,26 @@ function newPlaylistTracks(num_songs) {
         case 178:
           _context3.prev = 178;
           _context3.t6 = _context3["catch"](174);
-          _didIteratorError8 = true;
-          _iteratorError8 = _context3.t6;
+          _didIteratorError7 = true;
+          _iteratorError7 = _context3.t6;
 
         case 182:
           _context3.prev = 182;
           _context3.prev = 183;
 
-          if (!_iteratorNormalCompletion8 && _iterator8["return"] != null) {
-            _iterator8["return"]();
+          if (!_iteratorNormalCompletion7 && _iterator7["return"] != null) {
+            _iterator7["return"]();
           }
 
         case 185:
           _context3.prev = 185;
 
-          if (!_didIteratorError8) {
+          if (!_didIteratorError7) {
             _context3.next = 188;
             break;
           }
 
-          throw _iteratorError8;
+          throw _iteratorError7;
 
         case 188:
           return _context3.finish(185);
@@ -917,13 +881,13 @@ app.get("/new", function _callee2(req, res) {
 
 function multipleArtistUrl(artists) {
   var returnUrl = 'https://api.spotify.com/v1/artists?ids=';
-  var _iteratorNormalCompletion10 = true;
-  var _didIteratorError10 = false;
-  var _iteratorError10 = undefined;
+  var _iteratorNormalCompletion9 = true;
+  var _didIteratorError9 = false;
+  var _iteratorError9 = undefined;
 
   try {
-    for (var _iterator10 = artists[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
-      artist = _step10.value;
+    for (var _iterator9 = artists[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+      artist = _step9.value;
       returnUrl += artist;
 
       if (artist !== artists[artists.length - 1]) {
@@ -931,16 +895,16 @@ function multipleArtistUrl(artists) {
       }
     }
   } catch (err) {
-    _didIteratorError10 = true;
-    _iteratorError10 = err;
+    _didIteratorError9 = true;
+    _iteratorError9 = err;
   } finally {
     try {
-      if (!_iteratorNormalCompletion10 && _iterator10["return"] != null) {
-        _iterator10["return"]();
+      if (!_iteratorNormalCompletion9 && _iterator9["return"] != null) {
+        _iterator9["return"]();
       }
     } finally {
-      if (_didIteratorError10) {
-        throw _iteratorError10;
+      if (_didIteratorError9) {
+        throw _iteratorError9;
       }
     }
   }
@@ -949,7 +913,7 @@ function multipleArtistUrl(artists) {
 }
 
 function addToExisting(name, num_songs) {
-  var foundUser, jsonHeaders, playlists, match, matchedId, tracksUrl, _iteratorNormalCompletion11, _didIteratorError11, _iteratorError11, _iterator11, _step11, foundPlaylist, trackIds, empty, _iteratorNormalCompletion12, _didIteratorError12, _iteratorError12, _iterator12, _step12, artists, genres, _iteratorNormalCompletion13, _didIteratorError13, _iteratorError13, _iterator13, _step13, sampledArtists, artistUrl, severalArtists, _iteratorNormalCompletion14, _didIteratorError14, _iteratorError14, _iterator14, _step14, _iteratorNormalCompletion17, _didIteratorError17, _iteratorError17, _iterator17, _step17, seedArtists, seedGenres, seedTracks, uris, numIters, _i4, recUrl, _iteratorNormalCompletion15, _didIteratorError15, _iteratorError15, _iterator15, _step15, remainingSongs, _recUrl3, _iteratorNormalCompletion16, _didIteratorError16, _iteratorError16, _iterator16, _step16, lastIndex, selections, _i5, currentSelection, remainingUris, _j3, _j4, _i6, _selections2, dataBody, addPlaylistUrl, _dataBody2, _addPlaylistUrl2;
+  var foundUser, jsonHeaders, playlists, match, matchedId, tracksUrl, _iteratorNormalCompletion10, _didIteratorError10, _iteratorError10, _iterator10, _step10, foundPlaylist, trackIds, empty, _iteratorNormalCompletion11, _didIteratorError11, _iteratorError11, _iterator11, _step11, artists, genres, _iteratorNormalCompletion12, _didIteratorError12, _iteratorError12, _iterator12, _step12, sampledArtists, artistUrl, severalArtists, _iteratorNormalCompletion13, _didIteratorError13, _iteratorError13, _iterator13, _step13, _iteratorNormalCompletion16, _didIteratorError16, _iteratorError16, _iterator16, _step16, seedArtists, seedGenres, seedTracks, uris, numIters, _i4, recUrl, _iteratorNormalCompletion14, _didIteratorError14, _iteratorError14, _iterator14, _step14, remainingSongs, _recUrl3, _iteratorNormalCompletion15, _didIteratorError15, _iteratorError15, _iterator15, _step15, lastIndex, selections, _i5, currentSelection, remainingUris, _j3, _j4, _i6, _selections2, dataBody, addPlaylistUrl, _dataBody2, _addPlaylistUrl2;
 
   return regeneratorRuntime.async(function addToExisting$(_context5) {
     while (1) {
@@ -977,19 +941,19 @@ function addToExisting(name, num_songs) {
           playlists = _context5.sent;
           // if the inputted name doesn't exist, then the match variable should be false and I notify the user
           match = false;
-          _iteratorNormalCompletion11 = true;
-          _didIteratorError11 = false;
-          _iteratorError11 = undefined;
+          _iteratorNormalCompletion10 = true;
+          _didIteratorError10 = false;
+          _iteratorError10 = undefined;
           _context5.prev = 11;
-          _iterator11 = playlists.items[Symbol.iterator]();
+          _iterator10 = playlists.items[Symbol.iterator]();
 
         case 13:
-          if (_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done) {
+          if (_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done) {
             _context5.next = 23;
             break;
           }
 
-          playlist = _step11.value;
+          playlist = _step10.value;
 
           if (!(playlist.name.toLowerCase() === name.toLowerCase())) {
             _context5.next = 20;
@@ -1004,7 +968,7 @@ function addToExisting(name, num_songs) {
           return _context5.abrupt("break", 23);
 
         case 20:
-          _iteratorNormalCompletion11 = true;
+          _iteratorNormalCompletion10 = true;
           _context5.next = 13;
           break;
 
@@ -1015,26 +979,26 @@ function addToExisting(name, num_songs) {
         case 25:
           _context5.prev = 25;
           _context5.t0 = _context5["catch"](11);
-          _didIteratorError11 = true;
-          _iteratorError11 = _context5.t0;
+          _didIteratorError10 = true;
+          _iteratorError10 = _context5.t0;
 
         case 29:
           _context5.prev = 29;
           _context5.prev = 30;
 
-          if (!_iteratorNormalCompletion11 && _iterator11["return"] != null) {
-            _iterator11["return"]();
+          if (!_iteratorNormalCompletion10 && _iterator10["return"] != null) {
+            _iterator10["return"]();
           }
 
         case 32:
           _context5.prev = 32;
 
-          if (!_didIteratorError11) {
+          if (!_didIteratorError10) {
             _context5.next = 35;
             break;
           }
 
-          throw _iteratorError11;
+          throw _iteratorError10;
 
         case 35:
           return _context5.finish(32);
@@ -1061,13 +1025,13 @@ function addToExisting(name, num_songs) {
           // and they should create a new playlist instead using the other path that's set up
 
           empty = false;
-          _iteratorNormalCompletion12 = true;
-          _didIteratorError12 = false;
-          _iteratorError12 = undefined;
+          _iteratorNormalCompletion11 = true;
+          _didIteratorError11 = false;
+          _iteratorError11 = undefined;
           _context5.prev = 46;
 
-          for (_iterator12 = foundPlaylist.tracks.items[Symbol.iterator](); !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
-            item = _step12.value;
+          for (_iterator11 = foundPlaylist.tracks.items[Symbol.iterator](); !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+            item = _step11.value;
             trackIds.push(item.track.id);
           }
 
@@ -1077,26 +1041,26 @@ function addToExisting(name, num_songs) {
         case 50:
           _context5.prev = 50;
           _context5.t1 = _context5["catch"](46);
-          _didIteratorError12 = true;
-          _iteratorError12 = _context5.t1;
+          _didIteratorError11 = true;
+          _iteratorError11 = _context5.t1;
 
         case 54:
           _context5.prev = 54;
           _context5.prev = 55;
 
-          if (!_iteratorNormalCompletion12 && _iterator12["return"] != null) {
-            _iterator12["return"]();
+          if (!_iteratorNormalCompletion11 && _iterator11["return"] != null) {
+            _iterator11["return"]();
           }
 
         case 57:
           _context5.prev = 57;
 
-          if (!_didIteratorError12) {
+          if (!_didIteratorError11) {
             _context5.next = 60;
             break;
           }
 
-          throw _iteratorError12;
+          throw _iteratorError11;
 
         case 60:
           return _context5.finish(57);
@@ -1118,13 +1082,13 @@ function addToExisting(name, num_songs) {
           genres = []; // I opted to only get the main artist's id since it'd be easier to code for, as there are many
           // collaborations of artists from differing genres and a playlist is bound to have repeats of artists
 
-          _iteratorNormalCompletion13 = true;
-          _didIteratorError13 = false;
-          _iteratorError13 = undefined;
+          _iteratorNormalCompletion12 = true;
+          _didIteratorError12 = false;
+          _iteratorError12 = undefined;
           _context5.prev = 69;
 
-          for (_iterator13 = foundPlaylist.tracks.items[Symbol.iterator](); !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
-            item = _step13.value;
+          for (_iterator12 = foundPlaylist.tracks.items[Symbol.iterator](); !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+            item = _step12.value;
 
             if (artists.indexOf(item.track.artists[0].id) === -1) {
               artists.push(item.track.artists[0].id);
@@ -1144,26 +1108,26 @@ function addToExisting(name, num_songs) {
         case 73:
           _context5.prev = 73;
           _context5.t2 = _context5["catch"](69);
-          _didIteratorError13 = true;
-          _iteratorError13 = _context5.t2;
+          _didIteratorError12 = true;
+          _iteratorError12 = _context5.t2;
 
         case 77:
           _context5.prev = 77;
           _context5.prev = 78;
 
-          if (!_iteratorNormalCompletion13 && _iterator13["return"] != null) {
-            _iterator13["return"]();
+          if (!_iteratorNormalCompletion12 && _iterator12["return"] != null) {
+            _iterator12["return"]();
           }
 
         case 80:
           _context5.prev = 80;
 
-          if (!_didIteratorError13) {
+          if (!_didIteratorError12) {
             _context5.next = 83;
             break;
           }
 
-          throw _iteratorError13;
+          throw _iteratorError12;
 
         case 83:
           return _context5.finish(80);
@@ -1187,26 +1151,26 @@ function addToExisting(name, num_songs) {
           // the only way to get the genre associated with the track. This isn't 100% but it's the best
           // way I could think of getting the genres in a playlist.
           // I did the same thing I did for artists here, getting only the unique genres 
-          _iteratorNormalCompletion14 = true;
-          _didIteratorError14 = false;
-          _iteratorError14 = undefined;
+          _iteratorNormalCompletion13 = true;
+          _didIteratorError13 = false;
+          _iteratorError13 = undefined;
           _context5.prev = 93;
-          _iterator14 = severalArtists.artists[Symbol.iterator]();
+          _iterator13 = severalArtists.artists[Symbol.iterator]();
 
         case 95:
-          if (_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done) {
+          if (_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done) {
             _context5.next = 119;
             break;
           }
 
-          artist = _step14.value;
-          _iteratorNormalCompletion17 = true;
-          _didIteratorError17 = false;
-          _iteratorError17 = undefined;
+          artist = _step13.value;
+          _iteratorNormalCompletion16 = true;
+          _didIteratorError16 = false;
+          _iteratorError16 = undefined;
           _context5.prev = 100;
 
-          for (_iterator17 = artist.genres[Symbol.iterator](); !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
-            genre = _step17.value;
+          for (_iterator16 = artist.genres[Symbol.iterator](); !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
+            genre = _step16.value;
 
             if (genres.indexOf(genre) === -1) {
               genres.push(genre);
@@ -1219,26 +1183,26 @@ function addToExisting(name, num_songs) {
         case 104:
           _context5.prev = 104;
           _context5.t3 = _context5["catch"](100);
-          _didIteratorError17 = true;
-          _iteratorError17 = _context5.t3;
+          _didIteratorError16 = true;
+          _iteratorError16 = _context5.t3;
 
         case 108:
           _context5.prev = 108;
           _context5.prev = 109;
 
-          if (!_iteratorNormalCompletion17 && _iterator17["return"] != null) {
-            _iterator17["return"]();
+          if (!_iteratorNormalCompletion16 && _iterator16["return"] != null) {
+            _iterator16["return"]();
           }
 
         case 111:
           _context5.prev = 111;
 
-          if (!_didIteratorError17) {
+          if (!_didIteratorError16) {
             _context5.next = 114;
             break;
           }
 
-          throw _iteratorError17;
+          throw _iteratorError16;
 
         case 114:
           return _context5.finish(111);
@@ -1247,7 +1211,7 @@ function addToExisting(name, num_songs) {
           return _context5.finish(108);
 
         case 116:
-          _iteratorNormalCompletion14 = true;
+          _iteratorNormalCompletion13 = true;
           _context5.next = 95;
           break;
 
@@ -1258,26 +1222,26 @@ function addToExisting(name, num_songs) {
         case 121:
           _context5.prev = 121;
           _context5.t4 = _context5["catch"](93);
-          _didIteratorError14 = true;
-          _iteratorError14 = _context5.t4;
+          _didIteratorError13 = true;
+          _iteratorError13 = _context5.t4;
 
         case 125:
           _context5.prev = 125;
           _context5.prev = 126;
 
-          if (!_iteratorNormalCompletion14 && _iterator14["return"] != null) {
-            _iterator14["return"]();
+          if (!_iteratorNormalCompletion13 && _iterator13["return"] != null) {
+            _iterator13["return"]();
           }
 
         case 128:
           _context5.prev = 128;
 
-          if (!_didIteratorError14) {
+          if (!_didIteratorError13) {
             _context5.next = 131;
             break;
           }
 
-          throw _iteratorError14;
+          throw _iteratorError13;
 
         case 131:
           return _context5.finish(128);
@@ -1318,13 +1282,13 @@ function addToExisting(name, num_songs) {
 
         case 147:
           recommendations = _context5.sent;
-          _iteratorNormalCompletion15 = true;
-          _didIteratorError15 = false;
-          _iteratorError15 = undefined;
+          _iteratorNormalCompletion14 = true;
+          _didIteratorError14 = false;
+          _iteratorError14 = undefined;
           _context5.prev = 151;
 
-          for (_iterator15 = recommendations.tracks[Symbol.iterator](); !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
-            item = _step15.value;
+          for (_iterator14 = recommendations.tracks[Symbol.iterator](); !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
+            item = _step14.value;
             uris.push(item.uri);
           }
 
@@ -1334,26 +1298,26 @@ function addToExisting(name, num_songs) {
         case 155:
           _context5.prev = 155;
           _context5.t5 = _context5["catch"](151);
-          _didIteratorError15 = true;
-          _iteratorError15 = _context5.t5;
+          _didIteratorError14 = true;
+          _iteratorError14 = _context5.t5;
 
         case 159:
           _context5.prev = 159;
           _context5.prev = 160;
 
-          if (!_iteratorNormalCompletion15 && _iterator15["return"] != null) {
-            _iterator15["return"]();
+          if (!_iteratorNormalCompletion14 && _iterator14["return"] != null) {
+            _iterator14["return"]();
           }
 
         case 162:
           _context5.prev = 162;
 
-          if (!_didIteratorError15) {
+          if (!_didIteratorError14) {
             _context5.next = 165;
             break;
           }
 
-          throw _iteratorError15;
+          throw _iteratorError14;
 
         case 165:
           return _context5.finish(162);
@@ -1379,13 +1343,13 @@ function addToExisting(name, num_songs) {
 
         case 176:
           recommendations = _context5.sent;
-          _iteratorNormalCompletion16 = true;
-          _didIteratorError16 = false;
-          _iteratorError16 = undefined;
+          _iteratorNormalCompletion15 = true;
+          _didIteratorError15 = false;
+          _iteratorError15 = undefined;
           _context5.prev = 180;
 
-          for (_iterator16 = recommendations.tracks[Symbol.iterator](); !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
-            item = _step16.value;
+          for (_iterator15 = recommendations.tracks[Symbol.iterator](); !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
+            item = _step15.value;
             uris.push(item.uri);
           }
 
@@ -1395,26 +1359,26 @@ function addToExisting(name, num_songs) {
         case 184:
           _context5.prev = 184;
           _context5.t6 = _context5["catch"](180);
-          _didIteratorError16 = true;
-          _iteratorError16 = _context5.t6;
+          _didIteratorError15 = true;
+          _iteratorError15 = _context5.t6;
 
         case 188:
           _context5.prev = 188;
           _context5.prev = 189;
 
-          if (!_iteratorNormalCompletion16 && _iterator16["return"] != null) {
-            _iterator16["return"]();
+          if (!_iteratorNormalCompletion15 && _iterator15["return"] != null) {
+            _iterator15["return"]();
           }
 
         case 191:
           _context5.prev = 191;
 
-          if (!_didIteratorError16) {
+          if (!_didIteratorError15) {
             _context5.next = 194;
             break;
           }
 
-          throw _iteratorError16;
+          throw _iteratorError15;
 
         case 194:
           return _context5.finish(191);
@@ -1532,13 +1496,6 @@ app.get('/mod', function _callee3(req, res) {
 
         case 2:
           result = _context6.sent;
-          // if(result === 'noSong'){
-          //   res.json("There weren't any songs in the requested playlist. Use the other form if you want to create a new playlist from scratch!");
-          // }else if(result === 'noPlay'){
-          //   res.json('No playlist found of that name. Please try again.')
-          // }else{
-          //   res.json("Success!");
-          // }
           res.redirect("/");
 
         case 4:
@@ -1554,12 +1511,4 @@ if (port == null || port == "") {
   port = 8000;
 }
 
-app.listen(port); // ensure the user is still authenticated
-
-function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-
-  res.redirect("/");
-}
+app.listen(port);
