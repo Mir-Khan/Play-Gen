@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+        integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous"
+        type="text/css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+        crossorigin="anonymous"></script>
+    <!-- Personal stylesheet -->
+    <link rel="stylesheet" href='css/style.min.css' type="text/css">
+    <link rel="stylesheet" href="css/nav.min.css" type="text/css">
+    <link rel="stylesheet" href="css/forms.min.css" type="text/css">
+    <title>Play-Gen</title>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row nav-row">
+            <nav class="navbar navbar-expand-lg navbar-dark">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03"
+                    aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-bar-down" fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                            d="M1 3.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13a.5.5 0 0 1-.5-.5zM8 6a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 0 1 .708-.708L7.5 12.293V6.5A.5.5 0 0 1 8 6z" />
+                    </svg>
+                </button>
+                <a class="navbar-brand" href="#">Play-Gen</a>
+                <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+                    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                        {% if user %}
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/rec">Playlist Creator</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/user-input">User Inputs</a>
+                        </li>
+                        <li class="nav-item"><a href="https://github.com/Mir-Khan/Play-Gen" class="nav-link">Github</a>
+                        </li>
+                        <li class="nav-item"><a href="https://www.mir-khan.com/" target="_blank"
+                                class="nav-link">Resume</a></li>
+                        {% else %}
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item"><a href="https://github.com/Mir-Khan/Play-Gen" class="nav-link">Github</a>
+                        </li>
+                        <li class="nav-item"><a href="https://www.mir-khan.com/" target="_blank"
+                                class="nav-link">Resume</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </nav>
+        </div>
+        {% if not user %}
+        <div class="col">
+            <div class="row justify-content-center text-center">
+                <h1>Play-Gen</h1>
+            </div>
+            <div class="row justify-content-center">
+                <form action="/auth/spotify/callback/user" method="GET">
+                    <div class="form-row text-center">
+                        <div>
+                            <h1>Welcome! Please log into Spotify using the button below.</h1>
+                            <button type="submit" class="btn"
+                                style="font-size: 3rem; margin-top: 5rem;"><span>Login</span></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% else %}
+        <div class="row">
+            <div class="col" id="forms-col">
+                <div class="row justify-content-center text-center">
+                    <h2>Welcome {{user.displayName}}! This page creates playlists based on your inputs.</h2>
+                </div>
+                <div class="row">
+                    <div class="col" id="create-form">
+                        <h2 class="text-center">Create a new playlist</h2>
+                        <hr>
+                        <form action="/user-new" method="GET" class="needs-validation user-forms" autocomplete="off"
+                            novalidate>
+                            <div class="form-row justify-content-center">
+                                <div class="form-group">
+                                    <label for="new_playlist_name">Playlist Name:</label>
+                                    <input type="text" name="new_playlist_name" id="new_playlist_name"
+                                        placeholder="Playlist name" class="form-control form-control-sm text-input"
+                                        required>
+                                    <div class="invalid-feedback">
+                                        <p class="feedback-text">Please enter a playlist name.</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="num_songs">Number of songs:  <a data-toggle="tooltip"
+                                            data-original-title="A max of 1000 songs can be entered"><svg viewBox="0 0 16 16"
+                                                class="bi bi-question-circle tooltip-style"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd"
+                                                    d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                <path
+                                                    d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z" />
+                                            </svg></a></label>
+                                    <input type="number" min="1" max="1000" name="num_songs" id="num_songs"
+                                        class="num-input form-control form-control-sm" placeholder="1" required>
+                                    <div class="invalid-feedback">
+                                        <p class="feedback-text">Please enter a number from 1 to 1000.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row justify-content-center">
+                                <div class="form-group">
+                                    <label for="artistOne">Artist No. 1:</label>
+                                    <input type="text" name="artistOne" id="artistOne"
+                                        class="form-control form-control-sm text-input" placeholder="Artist" required>
+                                    <div class="invalid-feedback">
+                                        <p class="feedback-text">Please enter an artist.</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="artistTwo">Artist No. 2:</label>
+                                    <input type="text" name="artistTwo" id="artistTwo"
+                                        class="form-control form-control-sm text-input" placeholder="Artist">
+                                </div>
+                            </div>
+                            <div class="form-row justify-content-center">
+                                <div class="form-group">
+                                    <div class="autocomplete">
+                                        <label for="genreOne">Genre No. 1:</label>
+                                        <input type="text" name="genreOne" id="genreOne"
+                                            class="form-control form-control-sm text-input" placeholder="Genre"
+                                            required>
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        <p class="feedback-text">Please enter a genre.</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="autocomplete">
+                                        <label for="genreTwo">Genre No. 2:</label>
+                                        <input type="text" name="genreTwo" id="genreTwo"
+                                            class="form-control form-control-sm text-input" placeholder="Genre">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row justify-content-center">
+                                <div class="form-group">
+                                    <label for="trackNew">Track:</label>
+                                    <input type="text" name="trackNew" id="trackNew"
+                                        class="form-control form-control-sm text-input" placeholder="Track Name"
+                                        required>
+                                    <div class="invalid-feedback">
+                                        <p class="feedback-text">Please enter a track.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="trackNewArtist">Track's Artist:  <a data-toggle="tooltip"
+                                            data-original-title="The artist of the track you entered"><svg viewBox="0 0 16 16"
+                                                class="bi bi-question-circle tooltip-style"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd"
+                                                    d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                <path
+                                                    d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z" />
+                                            </svg></a></label>
+                                    <input type="text" name="trackNewArtist" id="trackNewArtist"
+                                        class="form-control form-control-sm text-input" placeholder="Track's Artist"
+                                        required>
+                                    <div class="invalid-feedback">
+                                        <p class="feedback-text">Please enter a name of a track.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row justify-content-center">
+                                <div class="form-group form-check align-items-center">
+                                    <label for="private_checkbox" class="form-check-label">Private?  <a
+                                            data-toggle="tooltip" data-original-title="Choose whether others can see the playlist we create"><svg viewBox="0 0 16 16"
+                                                class="bi bi-question-circle tooltip-style"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd"
+                                                    d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                <path
+                                                    d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z" />
+                                            </svg></a></label><br>
+                                    <input type="checkbox" name="private_checkbox" id="private_checkbox"
+                                        class="form-check-input checkbox"><br>
+                                </div>
+                            </div>
+                            <div class="form-row justify-content-center">
+                                <div class="form-group text-center button-div">
+                                    <button type="submit" class="btn">
+                                        <span> <svg width="1em" height="1em" viewBox="0 0 16 16"
+                                                class="bi bi-music-note-list" fill="currentColor"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M12 13c0 1.105-1.12 2-2.5 2S7 14.105 7 13s1.12-2 2.5-2 2.5.895 2.5 2z" />
+                                                <path fill-rule="evenodd" d="M12 3v10h-1V3h1z" />
+                                                <path
+                                                    d="M11 2.82a1 1 0 0 1 .804-.98l3-.6A1 1 0 0 1 16 2.22V4l-5 1V2.82z" />
+                                                <path fill-rule="evenodd"
+                                                    d="M0 11.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 7H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 3H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5z" />
+                                            </svg>
+                                            Submit</button></span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col" id="mod-form">
+                        <h2 class="text-center">Add to an existing playlist.</h2>
+                        <hr>
+                        <form action="/user-mod" method="GET" class="needs-validation user-forms" autocomplete="off"
+                            novalidate>
+                            <div class="form-row justify-content-center">
+                                <div class="form-group">
+                                    <label for="mod_playlist_name">Playlist name:</label>
+                                    <input type="text" name="mod_playlist_name" id="mod_playlist_name"
+                                        class="form-control form-control-sm text-input" placeholder="Playlist Name"
+                                        required>
+                                    <div class="invalid-feedback">
+                                        <p class="feedback-text">Please enter a playlist name.</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="add_songs">Number of songs:  <a data-toggle="tooltip"
+                                            data-original-title="A max of 1000 songs can be entered"><svg viewBox="0 0 16 16"
+                                                class="bi bi-question-circle tooltip-style"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd"
+                                                    d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                <path
+                                                    d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z" />
+                                            </svg></a></label>
+                                    <input type="number" min="1" max="1000" name="add_songs" id="add_songs"
+                                        class="num-input form-control form-control-sm" placeholder="1" required>
+                                    <div class="invalid-feedback">
+                                        <p class="feedback-text">Please enter a number from 1 to 1000.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row justify-content-center">
+                                <div class="form-group">
+                                    <label for="artistModOne">Artist No. 1:</label>
+                                    <input type="text" name="artistModOne" id="artistModOne"
+                                        class="form-control form-control-sm text-input" placeholder="Artist" required>
+                                    <div class="invalid-feedback">
+                                        <p class="feedback-text">Please enter an artist.</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="artistModTwo">Artist No. 2:</label>
+                                    <input type="text" name="artistModTwo" id="artistModTwo"
+                                        class="form-control form-control-sm text-input" placeholder="Artist">
+                                </div>
+                            </div>
+                            <div class="form-row justify-content-center">
+                                <div class="form-group">
+                                    <div class="autocomplete">
+                                        <label for="genreModOne">Genre No. 1:</label>
+                                        <input type="text" name="genreModOne" id="genreModOne"
+                                            class="form-control form-control-sm text-input" placeholder="Genre"
+                                            required>
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        <p class="feedback-text">Please enter a genre.</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="autocomplete">
+                                        <label for="genreModTwo">Genre No. 2:</label>
+                                        <input type="text" name="genreModTwo" id="genreModTwo"
+                                            class="form-control form-control-sm text-input" placeholder="Genre">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row justify-content-center">
+                                <div class="form-group">
+                                    <label for="trackMod">Track:</label>
+                                    <input type="text" name="trackMod" id="trackMod"
+                                        class="form-control form-control-sm text-input" placeholder="Track Name"
+                                        required>
+                                    <div class="invalid-feedback">
+                                        <p class="feedback-text">Please enter a name of a track.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="trackModArtist">Track's Artist:  <a data-toggle="tooltip"
+                                            data-original-title="The artist of the track you entered"><svg viewBox="0 0 16 16"
+                                                class="bi bi-question-circle tooltip-style"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd"
+                                                    d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                <path
+                                                    d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z" />
+                                            </svg></a></label>
+                                    <input type="text" name="trackModArtist" id="trackModArtist"
+                                        class="form-control form-control-sm text-input" placeholder="Track Name"
+                                        required>
+                                    <div class="invalid-feedback">
+                                        <p class="feedback-text">Please enter your track's artist.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row justify-content-center">
+                                <div class="form-group text-center button-div">
+                                    <button type="submit" class="btn">
+                                        <span> <svg width="1em" height="1em" viewBox="0 0 16 16"
+                                                class="bi bi-music-note-list" fill="currentColor"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M12 13c0 1.105-1.12 2-2.5 2S7 14.105 7 13s1.12-2 2.5-2 2.5.895 2.5 2z" />
+                                                <path fill-rule="evenodd" d="M12 3v10h-1V3h1z" />
+                                                <path
+                                                    d="M11 2.82a1 1 0 0 1 .804-.98l3-.6A1 1 0 0 1 16 2.22V4l-5 1V2.82z" />
+                                                <path fill-rule="evenodd"
+                                                    d="M0 11.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 7H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 3H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5z" />
+                                            </svg>
+                                            Submit</button></span>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="row text-center logout">
+                            <form action="/logout" method="GET">
+                                <div>
+                                    <button type="submit" class="btn"><span>Logout</span></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if user %}
+        <footer class="footer">
+            <div class="fluid-container text-center">
+                <p>Made by Mir Khan</p>
+                <p><a href="/">Home</a> | <a href="/rec">Playlist Creator</a> | <a href="/user-input">User Inputs</a> |
+                    <a href="https://github.com/Mir-Khan/Play-Gen" target="_blank">Github</a> | <a
+                        href="https://mir-khan.com" target="_blank">Resume</a></p>
+            </div>
+        </footer>
+    </div>
+    {% else %}
+    </div>
+    <footer class="footer">
+        <div class="fluid-container text-center">
+            <p>Made by Mir Khan</p>
+            <p><a href="/">Home</a> | <a href="https://github.com/Mir-Khan/Play-Gen" target="_blank">Github</a> | <a
+                    href="https://mir-khan.com" target="_blank">Resume</a></p>
+        </div>
+    </footer>
+    {% endif %}
+    <script>
+        // the genres gotten from the Get Available Genre Seeds path in the Browse API from Spotify
+        let genreArr = [
+            "acoustic",
+            "afrobeat",
+            "alt-rock",
+            "alternative",
+            "ambient",
+            "anime",
+            "black-metal",
+            "bluegrass",
+            "blues",
+            "bossanova",
+            "brazil",
+            "breakbeat",
+            "british",
+            "cantopop",
+            "chicago-house",
+            "children",
+            "chill",
+            "classical",
+            "club",
+            "comedy",
+            "country",
+            "dance",
+            "dancehall",
+            "death-metal",
+            "deep-house",
+            "detroit-techno",
+            "disco",
+            "disney",
+            "drum-and-bass",
+            "dub",
+            "dubstep",
+            "edm",
+            "electro",
+            "electronic",
+            "emo",
+            "folk",
+            "forro",
+            "french",
+            "funk",
+            "garage",
+            "german",
+            "gospel",
+            "goth",
+            "grindcore",
+            "groove",
+            "grunge",
+            "guitar",
+            "happy",
+            "hard-rock",
+            "hardcore",
+            "hardstyle",
+            "heavy-metal",
+            "hip-hop",
+            "holidays",
+            "honky-tonk",
+            "house",
+            "idm",
+            "indian",
+            "indie",
+            "indie-pop",
+            "industrial",
+            "iranian",
+            "j-dance",
+            "j-idol",
+            "j-pop",
+            "j-rock",
+            "jazz",
+            "k-pop",
+            "kids",
+            "latin",
+            "latino",
+            "malay",
+            "mandopop",
+            "metal",
+            "metal-misc",
+            "metalcore",
+            "minimal-techno",
+            "movies",
+            "mpb",
+            "new-age",
+            "new-release",
+            "opera",
+            "pagode",
+            "party",
+            "philippines-opm",
+            "piano",
+            "pop",
+            "pop-film",
+            "post-dubstep",
+            "power-pop",
+            "progressive-house",
+            "psych-rock",
+            "punk",
+            "punk-rock",
+            "r-n-b",
+            "rainy-day",
+            "reggae",
+            "reggaeton",
+            "road-trip",
+            "rock",
+            "rock-n-roll",
+            "rockabilly",
+            "romance",
+            "sad",
+            "salsa",
+            "samba",
+            "sertanejo",
+            "show-tunes",
+            "singer-songwriter",
+            "ska",
+            "sleep",
+            "songwriter",
+            "soul",
+            "soundtracks",
+            "spanish",
+            "study",
+            "summer",
+            "swedish",
+            "synth-pop",
+            "tango",
+            "techno",
+            "trance",
+            "trip-hop",
+            "turkish",
+            "work-out",
+            "world-music"
+        ];
+
+        // taken from W3 schools
+        function autocomplete(inp, arr) {
+            /*the autocomplete function takes two arguments,
+            the text field element and an array of possible autocompleted values:*/
+            var currentFocus;
+            /*execute a function when someone writes in the text field:*/
+            inp.addEventListener("input", function (e) {
+                var a, b, i, val = this.value;
+                /*close any already open lists of autocompleted values*/
+                closeAllLists();
+                if (!val) { return false; }
+                currentFocus = -1;
+                /*create a DIV element that will contain the items (values):*/
+                a = document.createElement("DIV");
+                a.setAttribute("id", this.id + "autocomplete-list");
+                a.setAttribute("class", "autocomplete-items");
+                /*append the DIV element as a child of the autocomplete container:*/
+                this.parentNode.appendChild(a);
+                /*for each item in the array...*/
+                for (i = 0; i < arr.length; i++) {
+                    /*check if the item starts with the same letters as the text field value:*/
+                    if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                        /*create a DIV element for each matching element:*/
+                        b = document.createElement("DIV");
+                        /*make the matching letters bold:*/
+                        b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                        b.innerHTML += arr[i].substr(val.length);
+                        /*insert a input field that will hold the current array item's value:*/
+                        b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                        /*execute a function when someone clicks on the item value (DIV element):*/
+                        b.addEventListener("click", function (e) {
+                            /*insert the value for the autocomplete text field:*/
+                            inp.value = this.getElementsByTagName("input")[0].value;
+                            /*close the list of autocompleted values,
+                            (or any other open lists of autocompleted values:*/
+                            closeAllLists();
+                        });
+                        a.appendChild(b);
+                    }
+                }
+            });
+            /*execute a function presses a key on the keyboard:*/
+            inp.addEventListener("keydown", function (e) {
+                var x = document.getElementById(this.id + "autocomplete-list");
+                if (x) x = x.getElementsByTagName("div");
+                if (e.keyCode == 40) {
+                    /*If the arrow DOWN key is pressed,
+                    increase the currentFocus variable:*/
+                    currentFocus++;
+                    /*and and make the current item more visible:*/
+                    addActive(x);
+                } else if (e.keyCode == 38) { //up
+                    /*If the arrow UP key is pressed,
+                    decrease the currentFocus variable:*/
+                    currentFocus--;
+                    /*and and make the current item more visible:*/
+                    addActive(x);
+                } else if (e.keyCode == 13) {
+                    /*If the ENTER key is pressed, prevent the form from being submitted,*/
+                    e.preventDefault();
+                    if (currentFocus > -1) {
+                        /*and simulate a click on the "active" item:*/
+                        if (x) x[currentFocus].click();
+                    }
+                }
+            });
+            function addActive(x) {
+                /*a function to classify an item as "active":*/
+                if (!x) return false;
+                /*start by removing the "active" class on all items:*/
+                removeActive(x);
+                if (currentFocus >= x.length) currentFocus = 0;
+                if (currentFocus < 0) currentFocus = (x.length - 1);
+                /*add class "autocomplete-active":*/
+                x[currentFocus].classList.add("autocomplete-active");
+            }
+            function removeActive(x) {
+                /*a function to remove the "active" class from all autocomplete items:*/
+                for (var i = 0; i < x.length; i++) {
+                    x[i].classList.remove("autocomplete-active");
+                }
+            }
+            function closeAllLists(elmnt) {
+                /*close all autocomplete lists in the document,
+                except the one passed as an argument:*/
+                var x = document.getElementsByClassName("autocomplete-items");
+                for (var i = 0; i < x.length; i++) {
+                    if (elmnt != x[i] && elmnt != inp) {
+                        x[i].parentNode.removeChild(x[i]);
+                    }
+                }
+            }
+            /*execute a function when someone clicks in the document:*/
+            document.addEventListener("click", function (e) {
+                closeAllLists(e.target);
+            });
+        }
+        // taken from W3 and modified
+        autocomplete(document.getElementById("genreOne"), genreArr);
+        autocomplete(document.getElementById("genreTwo"), genreArr);
+        autocomplete(document.getElementById("genreModOne"), genreArr);
+        autocomplete(document.getElementById("genreModTwo"), genreArr);
+    </script>
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        });
+        // taken from bootstrap docs
+        (function () {
+            'use strict';
+            window.addEventListener('load', function () {
+                // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                var forms = document.getElementsByClassName('needs-validation');
+                // Loop over them and prevent submission
+                var validation = Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
+</body>
+
+</html>

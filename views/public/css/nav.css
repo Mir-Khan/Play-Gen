@@ -1,0 +1,29 @@
+@import url("https://fonts.googleapis.com/css2?family=Dosis:wght@400;700&family=Montserrat:ital,wght@0,300;0,400;1,300;1,400&display=swap");
+.nav-row {
+  background-color: #201d1d;
+  color: #55dd6e; }
+  .nav-row nav {
+    padding-left: 2rem;
+    font-size: 1.5rem; }
+    .nav-row nav .navbar-brand {
+      font-family: "Dosis", sans-serif;
+      color: #55dd6e;
+      font-size: 1.5rem; }
+    .nav-row nav ul li {
+      display: inline-block;
+      position: relative;
+      color: #1b202d; }
+      .nav-row nav ul li:after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        transform: scaleX(0);
+        height: 2px;
+        bottom: 0;
+        left: 0;
+        background-color: #e11809;
+        transform-origin: bottom right;
+        transition: transform 0.4s cubic-bezier(0.86, 0, 0.07, 1); }
+      .nav-row nav ul li:hover::after {
+        transform: scaleX(1);
+        transform-origin: bottom left; }

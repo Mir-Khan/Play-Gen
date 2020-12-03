@@ -1,0 +1,27 @@
+$linen: hsl(26, 68%, 93%);
+
+.explain-list {
+    li::marker {
+        color: $linen;
+    }
+    color: $linen;
+    font-size: 1.6rem;
+}
+
+@media only screen and (max-width: 520px){
+    .explain-list{
+        font-size: 1.5rem;
+    }
+}
+
+@media only screen and (max-width: 415px){
+    .explain-list{
+        font-size: 1.3rem;
+    }
+}
+
+@media only screen and (max-width: 320px){
+    .explain-list{
+        font-size: 0.9rem;
+    }
+}

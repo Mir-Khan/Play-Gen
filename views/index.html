@@ -14,8 +14,10 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
 		crossorigin="anonymous"></script>
-	<!-- Personal stylesheet -->
+	<!-- Personal stylesheets -->
 	<link rel="stylesheet" href='css/style.min.css' type="text/css">
+	<link rel="stylesheet" href='css/nav.min.css' type="text/css">
+	<link rel="stylesheet" href='css/list.min.css' type="text/css">
 	<title>Play-Gen</title>
 </head>
 
@@ -25,27 +27,42 @@
 			<nav class="navbar navbar-expand-lg navbar-dark">
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03"
 					aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
-					<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-bar-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-						<path fill-rule="evenodd" d="M1 3.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13a.5.5 0 0 1-.5-.5zM8 6a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 0 1 .708-.708L7.5 12.293V6.5A.5.5 0 0 1 8 6z"/>
-					  </svg>
+					<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-bar-down" fill="currentColor"
+						xmlns="http://www.w3.org/2000/svg">
+						<path fill-rule="evenodd"
+							d="M1 3.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13a.5.5 0 0 1-.5-.5zM8 6a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 0 1 .708-.708L7.5 12.293V6.5A.5.5 0 0 1 8 6z" />
+					</svg>
 				</button>
 				<a class="navbar-brand" href="#">Play-Gen</a>
 				<div class="collapse navbar-collapse" id="navbarTogglerDemo03">
 					<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+						{% if user %}
 						<li class="nav-item active">
 							<a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="/how-to">How to use</a>
+							<a class="nav-link" href="/rec">Playlist Creator</a>
 						</li>
-						<li class="nav-item"><a href="https://github.com/Mir-Khan/Play-Gen" class="nav-link">Github</a></li>
+						<li class="nav-item">
+							<a class="nav-link" href="/user-input">User Inputs</a>
+						</li>
+						<li class="nav-item"><a href="https://github.com/Mir-Khan/Play-Gen" class="nav-link">Github</a>
+						</li>
 						<li class="nav-item"><a href="https://www.mir-khan.com/" target="_blank"
 								class="nav-link">Resume</a></li>
+						{% else %}
+						<li class="nav-item active">
+							<a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+						</li>
+						<li class="nav-item"><a href="https://github.com/Mir-Khan/Play-Gen" class="nav-link">Github</a>
+						</li>
+						<li class="nav-item"><a href="https://www.mir-khan.com/" target="_blank"
+								class="nav-link">Resume</a></li>
+						{% endif %}
 					</ul>
 				</div>
 			</nav>
 		</div>
-		{% block content %}
 		{% if not user %}
 		<div class="col">
 			<div class="row justify-content-center text-center">
@@ -64,121 +81,61 @@
 			</div>
 		</div>
 		{% else %}
-		<div class="row">
-			<div class="col" id="forms-col">
-				<div class="row justify-content-center">
-					<h2>Welcome {{user.displayName}}!</h2>
-				</div>
-				<div class="row">
-					<div class="col" id="create-form">
-						<h2 class="text-center">Create a new playlist</h2>
-						<hr>
-						<form action="/new" method="GET" class="needs-validation" novalidate>
-							<div class="form-row justify-content-center">
-								<div class="form-group">
-									<label for="new_playlist_name">Playlist name:</label>
-									<input type="text" id="new_playlist_name" name="new_playlist_name" required
-										class="text-input form-control form-control-sm">
-									<div class="invalid-feedback">
-										<p class="feedback-text">Please enter a playlist name.</p>
-									</div>
-								</div>
-								<div class="form-group">
-									<label for="num_songs">Number of songs:</label>
-									<input type="number" min="1" max="1000" id="num_songs" name="num_songs" required
-										placeholder='1' class="num-input form-control form-control-sm">
-									<div class="invalid-feedback">
-										<p class="feedback-text">Please enter a number from 1 to 1000 inclusively.</p>
-									</div>
-								</div>
-								<div class="form-group form-check align-items-center">
-									<label for="private_checkbox" class="form-check-label">Private?</label><br>
-									<input type="checkbox" name="private_checkbox" id="private_checkbox"
-										class="form-check-input checkbox"><br>
-								</div>
-								<div class="form-group text-center button-div">
-									<button type="submit" class="btn">
-										<span> <svg width="1em" height="1em" viewBox="0 0 16 16"
-												class="bi bi-music-note-list" fill="currentColor"
-												xmlns="http://www.w3.org/2000/svg">
-												<path
-													d="M12 13c0 1.105-1.12 2-2.5 2S7 14.105 7 13s1.12-2 2.5-2 2.5.895 2.5 2z" />
-												<path fill-rule="evenodd" d="M12 3v10h-1V3h1z" />
-												<path
-													d="M11 2.82a1 1 0 0 1 .804-.98l3-.6A1 1 0 0 1 16 2.22V4l-5 1V2.82z" />
-												<path fill-rule="evenodd"
-													d="M0 11.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 7H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 3H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5z" />
-											</svg>
-											Submit</button></span>
-								</div>
-							</div>
-							<br>
-						</form>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col" id="mod-form">
-						<h2 class="text-center">Add to existing playlists</h2>
-						<hr>
-						<form action="/mod" method="GET" class="needs-validation" novalidate>
-							<div class="form-row justify-content-center">
-								<div class="form-group">
-									<label>Playlist name:</label>
-									<input type="text" id="mod_playlist_name" name="mod_playlist_name" required
-										class="text-input form-control form-control-sm">
-									<div class="invalid-feedback">
-										<p class="feedback-text">Please enter a playlist name.</p>
-									</div>
-								</div>
-								<div class="form-group">
-									<label>Number of songs:</label>
-									<input type="number" min="1" max="1000" id="add_songs" name="add_songs" required
-										placeholder="1" class="num-input form-control form-control-sm">
-									<div class="invalid-feedback">
-										<p class="feedback-text">Please enter a number from 1 to 1000 inclusively.</p>
-									</div>
-								</div>
-								<div class="form-group text-center button-div">
-									<button type="submit" class="btn"><span>
-											<svg width="1em" height="1em" viewBox="0 0 16 16"
-												class="bi bi-music-note-list" fill="currentColor"
-												xmlns="http://www.w3.org/2000/svg">
-												<path
-													d="M12 13c0 1.105-1.12 2-2.5 2S7 14.105 7 13s1.12-2 2.5-2 2.5.895 2.5 2z" />
-												<path fill-rule="evenodd" d="M12 3v10h-1V3h1z" />
-												<path
-													d="M11 2.82a1 1 0 0 1 .804-.98l3-.6A1 1 0 0 1 16 2.22V4l-5 1V2.82z" />
-												<path fill-rule="evenodd"
-													d="M0 11.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 7H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 3H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5z" />
-											</svg>
-											Submit
-										</span>
-									</button>
-								</div>
-							</div>
-						</form>
-					</div>
-				</div>
-				<div class="row justify-content-center logout">
-					<form action="/logout" method="GET">
-						<div>
-							<button type="submit" class="btn"><span>Logout</span></button>
-						</div>
-					</form>
-				</div>
+		<div class="row text-center justify-content-center">
+			<div class="col">
+				<h2>Some Notes</h2>
 			</div>
 		</div>
+		<div class="row text-center justify-content-center">
+			<div class="col">
+				<h2>Recommending Form</h2>
+				<hr />
+				<ul class="explain-list">
+					<li>This tool bases the playlists off your listening history in the past 6 months</li>
+					<li>Enter the playlist name of the playlist you want to modify <span
+							style="font-weight: 700">exactly!</span></li>
+				</ul>
+			</div>
+			<div class="col">
+				<h2>User Input Form</h2>
+				<hr />
+				<ul class="explain-list">
+					<li>Artist names and track names are <span style="font-weight: 700">NOT</span> case sensitive</li>
+					<li>If a genre is not auto-completed but you've seen it on Spotify, it's good to use</li>
+					<li>You need to enter only one of an artist, genre, and track <span
+							style="font-weight: 700">BUT</span> you don't need to enter more than that</li>
+					<li>When entering a track, make sure to enter the artist of the track</li>
+				</ul>
+			</div>
+		</div>
+		<div class="row text-center logout">
+			<form action="/logout" method="GET">
+				<div>
+					<button type="submit" class="btn"><span>Logout</span></button>
+				</div>
+			</form>
+		</div>
 		{% endif %}
-		{% endblock %}
+		{% if user %}
 	</div>
 	<footer class="footer">
 		<div class="fluid-container text-center">
 			<p>Made by Mir Khan</p>
-			<p><a href="/">Home</a> | <a href="/how-to">How to use</a> | <a
-					href="https://github.com/Mir-Khan/Play-Gen" target="_blank">Github</a> | <a
+			<p><a href="/">Home</a> | <a href="/rec">Playlist Creator</a> | <a href="/user-input">User
+					Inputs</a> | <a href="https://github.com/Mir-Khan/Play-Gen" target="_blank">Github</a> | <a
 					href="https://mir-khan.com" target="_blank">Resume</a></p>
 		</div>
 	</footer>
+	{% else %}
+	</div>
+	<footer class="footer">
+		<div class="fluid-container text-center">
+			<p>Made by Mir Khan</p>
+			<p><a href="/">Home</a> | <a href="https://github.com/Mir-Khan/Play-Gen" target="_blank">Github</a> | <a
+					href="https://mir-khan.com" target="_blank">Resume</a></p>
+		</div>
+	</footer>
+	{% endif %}
 	<script>
 		// taken from bootstrap docs
 		(function () {
