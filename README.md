@@ -8,3 +8,12 @@ This app creates playlists en-masse in Spotify instead of one by one in the play
 * v1.1 
     * Fixed the server-side code to include less unneeded code. 
     * Also fixed the fact that quantities of more than 100 songs weren't being accepted by the form. The tool now works as advertised!
+* v1.2
+    * Added a user-input page where users can add their own fields for the Spotify recommendation API to create playlists with
+    * The index page is no longer where the forms are located. They have been instead moved to their own pages
+    * Cleaned up some of the server side code and separated most of the app functions into its own separate file
+    * Separated and minified the css so a page doesn't have to load every other page's css. Should've been done earlier but the page was just two pages at that point
+    * Added a 404 page
+    * With the addition of the new user-input page, the how-to page has been removed and replaced with just some brief notes on the page.
+    * There is also a new page which allows a user to choose which tool they'd like to use immediately after logging into Spotify
+    * Navbar and footer have been updated

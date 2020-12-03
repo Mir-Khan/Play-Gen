@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Dosis:wght@400;700&family=Montserrat:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+$titles: 'Dosis',
+sans-serif;
+$black: hsl(0, 5%, 12%);
+$vermil: hsl(4, 92%, 46%);
+$green: hsl(131, 67%, 60%);
+
+.nav-row {
+    background-color: $black;
+    color: $green;
+
+    nav {
+        padding-left: 2rem;
+        font-size: 1.5rem;
+
+        .navbar-brand {
+            font-family: $titles;
+            color: $green;
+            font-size: 1.5rem;
+        }
+
+        ul {
+            li {
+                // taken from https://emilkowalski.github.io/css-effects-snippets/ and slightly modified
+                display: inline-block;
+                position: relative;
+                color: hsl(222, 25%, 14%);
+
+                &:after {
+                    content: '';
+                    position: absolute;
+                    width: 100%;
+                    transform: scaleX(0);
+                    height: 2px;
+                    bottom: 0;
+                    left: 0;
+                    background-color: $vermil;
+                    transform-origin: bottom right;
+                    transition: transform 0.4s cubic-bezier(0.86, 0, 0.07, 1);
+                }
+
+                &:hover::after {
+                    transform: scaleX(1);
+                    transform-origin: bottom left;
+                }
+            }
+        }
+    }
+}

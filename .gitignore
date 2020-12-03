@@ -3,3 +3,4 @@ gulpfile.js
 .vscode
 .env
 views/public/scss/dist
+.eslintrc.json

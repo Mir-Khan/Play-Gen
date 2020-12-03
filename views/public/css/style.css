@@ -37,13 +37,6 @@ h3 {
   font-family: "Montserrat", sans-serif;
   font-size: 1.6rem; }
 
-.explain-list li::marker {
-  color: #f9ece1; }
-
-.list-row {
-  padding-bottom: 5rem;
-  margin: auto; }
-
 .btn {
   padding: 0.5rem 1.5rem;
   background-color: #55dd6e;
@@ -77,101 +70,26 @@ h3 {
 
 .container-fluid {
   background-color: #353131;
-  height: 100vh; }
-
-.nav-row {
-  background-color: #201d1d;
-  color: #55dd6e; }
-  .nav-row nav {
-    padding-left: 2rem;
-    font-size: 1.5rem; }
-    .nav-row nav .navbar-brand {
-      font-family: "Dosis", sans-serif;
-      color: #55dd6e;
-      font-size: 1.5rem; }
-    .nav-row nav ul li {
-      display: inline-block;
-      position: relative;
-      color: #1b202d; }
-      .nav-row nav ul li:after {
-        content: '';
-        position: absolute;
-        width: 100%;
-        transform: scaleX(0);
-        height: 2px;
-        bottom: 0;
-        left: 0;
-        background-color: #e11809;
-        transform-origin: bottom right;
-        transition: transform 0.4s cubic-bezier(0.86, 0, 0.07, 1); }
-      .nav-row nav ul li:hover::after {
-        transform: scaleX(1);
-        transform-origin: bottom left; }
+  height: 90vh; }
 
 .row {
-  margin-bottom: 2.5rem; }
+  margin-bottom: 5rem; }
 
 .btn {
   font-size: 1.7rem; }
-
-.form {
-  width: 40%;
-  margin: auto; }
-
-.sidebar-links {
-  list-style-type: none;
-  margin: 0;
-  padding-left: 2rem; }
-
-.form-group {
-  padding-right: 5rem; }
-
-.num-input {
-  width: 90%; }
-
-.num-input, .text-input {
-  font-size: 1.4rem; }
-
-.checkbox {
-  margin-left: 2rem; }
-
-.button-div {
-  margin-top: 1.2rem; }
-
-#collapse-button:hover {
-  cursor: pointer; }
-
-#create-form {
-  margin-bottom: 2rem; }
-
-.logout {
-  padding-top: 3rem; }
-
-.feedback-text {
-  font-size: 1.2rem;
-  color: #e11809; }
 
 .footer {
   background-color: #353131; }
   .footer p {
     color: #f9ece1;
-    font-size: 1.3rem;
-    font-family: "Montserrat", sans-serif; }
+    font-size: 1.1rem;
+    font-family: "Montserrat", sans-serif;
+    white-space: nowrap; }
     .footer p a {
+      display: inline-block !important;
       text-decoration: none;
       color: #55dd6e; }
       .footer p a:hover {
         color: #f9ece1 !important; }
       .footer p a:visited {
         color: #eeeb2b; }
-
-/* Removing the arrows from the number inputs, taken from W3 School*/
-/* Chrome, Safari, Edge, Opera */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0; }
-
-/* Firefox */
-input[type=number] {
-  -moz-appearance: textfield; }

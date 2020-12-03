@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Dosis:wght@400;700&family=Montserrat:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+$text: 'Montserrat',
+sans-serif;
+$linen: hsl(26, 68%, 93%);
+
+.choose-row{
+    margin-top: 20rem;
+}
+
+.choose-button {
+    border:none;
+    background: none;
+    svg{
+        fill: $linen;
+        width: 15rem;
+        height: 15rem;
+    }
+    p{
+        font-family: $text;
+        font-size: 1.7rem;
+        padding-top: 2rem;
+        color: $linen;
+    }
+}
+
+@media only screen and (max-width: 410px){
+    .choose-button{
+        svg{
+            width: 11rem;
+            height: 11rem;
+        }
+    }
+}
+
+@media only screen and (max-height: 700px){
+    .choose-row{
+        margin-top: 13rem;
+    }
+}
+
+@media only screen and (max-height: 600px){
+    .choose-row{
+        margin-top: 2rem;
+    }
+    .choose-button{
+        svg{
+            width: 9rem;
+            height: 9rem;
+        }
+    }
+}

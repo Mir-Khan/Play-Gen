@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Dosis:wght@400;700&family=Montserrat:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+$titles: 'Dosis',
+sans-serif;
+$text: 'Montserrat',
+sans-serif;
+$bold-text: 700;
+$regular-text: 500;
+$linen: hsl(26, 68%, 93%);
+
+.error-title{
+    color: $linen;
+    font-size: 2.5rem;
+    text-decoration: underline;
+    font-family: $titles;
+    font-weight: $bold-text;
+}
+
+.error-text{
+    color: $linen;
+    font-size: 1.8rem;
+    font-family: $text;
+}
