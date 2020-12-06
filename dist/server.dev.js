@@ -65,9 +65,9 @@ passport.deserializeUser(function (obj, done) {
   done(null, obj);
 }); // used for some of the Spotify API
 
-var currentUserId; // let cbUrl = 'https://play-gen.herokuapp.com' + authCallbackPath; //deployed environment
-
-var cbUrl = 'http://localhost:' + process.env.PORT + authCallbackPath; //local testing
+var currentUserId;
+var cbUrl = 'https://play-gen.herokuapp.com' + authCallbackPath; //deployed environment
+// let cbUrl = 'http://localhost:' + process.env.PORT + authCallbackPath //local testing
 
 passport.use(new SpotifyStrategy({
   clientID: process.env.CLIENT_ID,
