@@ -49,8 +49,8 @@ passport.deserializeUser(function (obj, done) {
 let currentUserId;
 
 
-let cbUrl = 'https://play-gen.herokuapp.com' + authCallbackPath; //deployed environment
-// let cbUrl = 'http://localhost:' + process.env.PORT + authCallbackPath //local testing
+// let cbUrl = 'https://play-gen.herokuapp.com' + authCallbackPath; //deployed environment
+let cbUrl = 'http://localhost:' + process.env.PORT + authCallbackPath //local testing
 
 passport.use(
   new SpotifyStrategy(
@@ -194,14 +194,19 @@ app.get("/new", async (req, res) => {
 });
 
 app.get('/mod', async (req, res) => {
-  let result = await apiFuncs.addToExisting(req.query.mod_playlist_name, req.query.add_songs, currentUserId);
+  let foundUser = await user.find({ _id: currentUserId });
+  let result = await apiFuncs.addToExisting(req.query.mod_playlist_name, req.query.add_songs, foundUser, currentUserId);
   res.redirect("/rec");
 });
 
 app.get('/user-new', async (req, res) => {
   let foundUser = await user.find({ _id: currentUserId });
-  await apiFuncs.newUserTracks(req.query, foundUser, currentUserId);
-  res.redirect('/user-input');
+  let result  = await apiFuncs.newUserTracks(req.query, foundUser, currentUserId);
+  if(result === 'error'){
+    res.json({status: 401, error: "Error: The track wasn't found. Please go back and enter another one."});
+  }else{
+    res.redirect('/user-input');
+  }
 });
 
 app.get('/user-mod', async (req, res) => {

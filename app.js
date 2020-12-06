@@ -342,42 +342,75 @@ async function newUserTracks(queries, foundUser, userId) {
     let artistsIds = [];
     // this is so the function to create the recommendation url doesn't run into any problems
     let trackId = await search(queries.trackNew, 'track', jsonHeaders, queries.trackNewArtist);
-    let trackIdArr = [trackId.id];
-    for (artist of artists) {
-        let currentId = await search(artist, 'artist', jsonHeaders);
-        artistsIds.push(currentId);
+    if(trackId !== undefined){
+        let trackIdArr = [trackId.id];
+        for (artist of artists) {
+            let currentId = await search(artist, 'artist', jsonHeaders);
+            artistsIds.push(currentId);
+        }
+        // the rest is extremely similar to the recommendation based playlist creator
+        let uris = await userUris(trackIdArr, genres, artistsIds, queries.num_songs, jsonHeaders);
+        let newPlaylistDetails = { name: queries.new_playlist_name, public: publicState, description: "Created on " + getDate() };
+        let newPlaylistUrl = 'https://api.spotify.com/v1/users/' + userId + '/playlists';
+        let newPlaylistId = await axiosCall({ method: 'post', url: newPlaylistUrl, headers: jsonHeaders, data: newPlaylistDetails, dataType: 'json' }, 'new');
+        await addSongsToNewPlaylist(uris, newPlaylistId, queries.num_songs, jsonHeaders);
+    }else{
+        return "error"
     }
-    // the rest is extremely similar to the recommendation based playlist creator
-    let uris = await userUris(trackIdArr, genres, artistsIds, queries.num_songs, jsonHeaders);
-    let newPlaylistDetails = { name: queries.new_playlist_name, public: publicState, description: "Created on " + getDate() };
-    let newPlaylistUrl = 'https://api.spotify.com/v1/users/' + userId + '/playlists';
-    let newPlaylistId = await axiosCall({ method: 'post', url: newPlaylistUrl, headers: jsonHeaders, data: newPlaylistDetails, dataType: 'json' }, 'new');
-    await addSongsToNewPlaylist(uris, newPlaylistId, queries.num_songs, jsonHeaders);
 }
 
 // this function is responsible for getting the ids needed for the recommendations based on the user inputs
-async function search(query, type, header, trackArtist = undefined) {
-    let callUrl = searchUrlCreator(query, type);
-    let result = await axiosCall({ url: callUrl, headers: header });
+async function search(query, type, header, trackArtist = undefined, offset = undefined) {
     if (trackArtist === undefined) {
+        // this part searches for artist ids
+        let callUrl = searchUrlCreator(query, type);
+        let result = await axiosCall({ url: callUrl, headers: header });
         return result.artists.items[0].id;
     } else {
+        // this part searches for track ids
+        let callUrl = searchUrlCreator(query + ' ' + trackArtist, type);
+        let result = await axiosCall({ url: callUrl, headers: header });
         let matchedTrack;
         for (track of result.tracks.items) {
             if ((track.artists[0].name).toLowerCase() === trackArtist.toLowerCase()) {
                 matchedTrack = track;
-                break;
             }
         }
-        return matchedTrack;
+        // if the title query is extremely common and the artist is relatively down the search list, the 
+        // first search may not be enough and it may need to be offset
+        let offset = 50;
+        // this will continue until offset is 1950 because the API has a limit of 2000, which includes the limit of 50 and the offset value
+        while(matchedTrack === undefined && offset < 1950){
+            let offsetCall = searchUrlCreator(query + ' ' + trackArtist, type, offset.toString());
+            let offsetResult = await axiosCall({ url: callUrl, headers: header });
+            let offsetMatch;
+            for (track of result.tracks.items) {
+                if ((track.artists[0].name).toLowerCase() === trackArtist.toLowerCase()) {
+                    offsetMatch = track;
+                }
+            }
+            offset += 50;
+        }
+        if(matchedTrack === undefined){
+            return undefined;
+        }else{
+            return matchedTrack;
+        }
     }
 }
 
 // this function creates a search url for the search API
-function searchUrlCreator(query, type) {
-    let baseUrl = 'https://api.spotify.com/v1/search?q=';
-    let newQuery = query.split(' ').join('%20');
-    return baseUrl + newQuery + '&type=' + type;
+function searchUrlCreator(query, type, offset = undefined) {
+    if (offset === undefined) {
+        let baseUrl = 'https://api.spotify.com/v1/search?q=';
+        let newQuery = query.split(' ').join('%20');
+        return baseUrl + newQuery + '&type=' + type + '&market=US&limit=50';
+    } else {
+        let baseUrl = 'https://api.spotify.com/v1/search?q=';
+        let newQuery = query.split(' ').join('%20');
+        let limit = '50';
+        return baseUrl + newQuery + '&type=' + type + '&market=US&limit=50&offset=' + offset;
+    }
 }
 
 // this function is responsible for getting the actual uris for the new user defined playlist
@@ -431,6 +464,7 @@ async function userUris(track, genres, artists, num_songs, jsonHeaders) {
     }
 }
 
+// this takes care of the modification input of the user input form
 async function userMod(queries, foundUser, userId) {
     const jsonHeaders = { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + foundUser[0].accessToken };
     let artists = [];
@@ -457,11 +491,11 @@ async function userMod(queries, foundUser, userId) {
     await userAddToExisting(queries.mod_playlist_name, queries.add_songs, userId, jsonHeaders, uris);
 }
 
+// takes care of adding the user inputted recommended songs to an existing playlist
 async function userAddToExisting(name, num_songs, currentUserId, jsonHeaders, uris) {
     let playlists = await axiosCall({ url: 'https://api.spotify.com/v1/users/' + currentUserId + '/playlists', headers: jsonHeaders });
     // a lot of this is just the addToExisting function just with the recommendation API being removed
     let match = false;
-    let addPlaylistUrl = 'https://api.spotify.com/v1/playlists/' + matchedId + '/tracks';
     let matchedId;
     for (playlist of playlists.items) {
         if ((playlist.name).toLowerCase() === name.toLowerCase()) {
@@ -471,6 +505,7 @@ async function userAddToExisting(name, num_songs, currentUserId, jsonHeaders, ur
         }
     }
     if (match) {
+        let addPlaylistUrl = 'https://api.spotify.com/v1/playlists/' + matchedId + '/tracks';
         let numIters = Number(num_songs) % 100 === 0 ? Math.floor(Number(num_songs) / 100) : Math.floor((Number(num_songs) / 100)) + 1;
         if (Number(num_songs)) {
             let lastIndex = 0;

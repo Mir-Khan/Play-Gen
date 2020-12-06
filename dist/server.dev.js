@@ -65,9 +65,9 @@ passport.deserializeUser(function (obj, done) {
   done(null, obj);
 }); // used for some of the Spotify API
 
-var currentUserId;
-var cbUrl = 'https://play-gen.herokuapp.com' + authCallbackPath; //deployed environment
-// let cbUrl = 'http://localhost:' + process.env.PORT + authCallbackPath //local testing
+var currentUserId; // let cbUrl = 'https://play-gen.herokuapp.com' + authCallbackPath; //deployed environment
+
+var cbUrl = 'http://localhost:' + process.env.PORT + authCallbackPath; //local testing
 
 passport.use(new SpotifyStrategy({
   clientID: process.env.CLIENT_ID,
@@ -263,19 +263,26 @@ app.get("/new", function _callee2(req, res) {
   });
 });
 app.get('/mod', function _callee3(req, res) {
-  var result;
+  var foundUser, result;
   return regeneratorRuntime.async(function _callee3$(_context3) {
     while (1) {
       switch (_context3.prev = _context3.next) {
         case 0:
           _context3.next = 2;
-          return regeneratorRuntime.awrap(apiFuncs.addToExisting(req.query.mod_playlist_name, req.query.add_songs, currentUserId));
+          return regeneratorRuntime.awrap(user.find({
+            _id: currentUserId
+          }));
 
         case 2:
+          foundUser = _context3.sent;
+          _context3.next = 5;
+          return regeneratorRuntime.awrap(apiFuncs.addToExisting(req.query.mod_playlist_name, req.query.add_songs, foundUser, currentUserId));
+
+        case 5:
           result = _context3.sent;
           res.redirect("/rec");
 
-        case 4:
+        case 7:
         case "end":
           return _context3.stop();
       }
@@ -283,7 +290,7 @@ app.get('/mod', function _callee3(req, res) {
   });
 });
 app.get('/user-new', function _callee4(req, res) {
-  var foundUser;
+  var foundUser, result;
   return regeneratorRuntime.async(function _callee4$(_context4) {
     while (1) {
       switch (_context4.prev = _context4.next) {
@@ -299,9 +306,18 @@ app.get('/user-new', function _callee4(req, res) {
           return regeneratorRuntime.awrap(apiFuncs.newUserTracks(req.query, foundUser, currentUserId));
 
         case 5:
-          res.redirect('/user-input');
+          result = _context4.sent;
 
-        case 6:
+          if (result === 'error') {
+            res.json({
+              status: 401,
+              error: "Error: The track wasn't found. Please go back and enter another one."
+            });
+          } else {
+            res.redirect('/user-input');
+          }
+
+        case 7:
         case "end":
           return _context4.stop();
       }

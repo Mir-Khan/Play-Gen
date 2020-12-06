@@ -17,3 +17,7 @@ This app creates playlists en-masse in Spotify instead of one by one in the play
     * With the addition of the new user-input page, the how-to page has been removed and replaced with just some brief notes on the page.
     * There is also a new page which allows a user to choose which tool they'd like to use immediately after logging into Spotify
     * Navbar and footer have been updated
+* v1.2.1
+    * Fixed bug with the user-input page where only the first 20 results were being searched for a track. This would've lead to problems when searching for more obscure artists with very common track names.
+    * Fixed bug with the rec page where incorrect variable names broke the form.
+    * Added an error message to the user-input page, might make it better later on
